@@ -124,12 +124,24 @@
   \feladatcim{Többutas médiaátvitel QUIC felett (Multipath MoQ)} 
 
   %\feladatmaga argumentuma a feladat 1-2 bekezdésnyi ismertetése
-  \feladatmaga{A Multipath tulajdonságokat megvalósító PicoQuic könyvtárra 
-  építő LibQuicR projekt módosítása úgy, hogy az képes legyen multipath 
-  alkalmazására. Valamint ennek a demonstrálása azzal, hogy egy virtuális környezetben
-  többutas adatátvitelt valósítunk meg a LibQuicR segítségével, ahol bármely 
-  multipath kapcsolat valamely útvonalát megszakítjuk, akkor minimális fennakadással
-  és beavatkozás nélkül tudja az adatátvitelt fenntartani a LibQuicR alkalmazás.}
+  \feladatmaga{
+    A LibQuicR multimédiás adatátviteli 
+  könyvtár módosítása oly módon, hogy az képes legyen kihasználni a 
+  multipath adatátviteli képességeket, amelyeket a PicoQUIC nevű, 
+  QUIC protokolt megvalósító könyvtár biztosít. A munka során
+  során a LibQuicR transzport rétegét úgy kell átalakítani, 
+  hogy az egy kapcsolaton belül több hálózati útvonal létesítésére 
+  és használatára legyen alkalmas a PicoQUIC multipath implementációján keresztül.
+
+  A módosításokat követően a rendszer működését egy demonstrációval 
+  igazoljuk: egy virtuális tesztkörnyezetben szimulált, több hálózati 
+  interfésszel rendelkező kliensek segítségével történik az adatátvitel, 
+  amely során aktívan használjuk a multipath képességeket. A demonstráció 
+  során egy olyan forgatókönyvet vizsgálunk, ahol az egyik aktív 
+  útvonalat szándékosan megszakítjuk. 
+  A cél annak bemutatása, hogy a LibQuicR – az új multipath támogatással – 
+  beavatkozás nélkül képes fenntartani az adatfolyam 
+  továbbítását, minimális késleltetéssel és megszakítással.}
 
  
   %\tanevfelev argumentumok:
