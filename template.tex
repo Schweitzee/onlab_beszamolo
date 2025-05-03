@@ -85,7 +85,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \input{onlabmacros} % Ez kell!!!
-\markright{Beszámoló Péter (BPOX43)} % egyoldalas fejléc!!!
+\markright{Schweitzer András Attila (TLEIB5)} % egyoldalas fejléc!!!
 %--------------------------------------------------------------------
 % fedlap
 %--------------------------------------------------------------------
@@ -103,14 +103,14 @@
 % \begin{center}
 %   \begin{tabular}{ p{3cm} p{5cm} }
 %   
-%   Készítette: & Beszámoló Péter  \\
-%   Neptun-kód: & BPOX43  \\
-%   Ágazat: & Médiainformatika  \\
-%   E-mail cím: & b.peter@onlab.hu  \\
-%   Konzulens: & Dr. Péhádes István  \\
-%   E-mail cím: & pehades@tmit.bme.hu  \\
-%   Konzulens: & Doktor Andusz  \\
-%   E-mail cím: & doktora@tmit.bme.hu  \\
+%   Készítette: & Schweitzer András Attila  \\
+%   Neptun-kód: & TLEIB5  \\
+%   Ágazat: & Intelligens hálózatok  \\
+%   E-mail cím: & schweitzeraa16@gmail.com  \\
+%   Konzulens: & Németh Felicián  \\
+%   E-mail cím: & nemethf@tmit.bme.hu  \\
+%   Konzulens: & Lévai Tamás  \\
+%   E-mail cím: & levait@tmit.bme.hu  \\
 %   
 %   \end{tabular}
 % \end{center}
@@ -121,7 +121,7 @@
  
  
 %\feladatcim argumentuma a feladat rövid, 1 soros címe
-  \feladatcim{Többutas médiaátvitel QUIC felett (Multipath MoQ)} 
+  \feladatcim{Többutas adatátvitel Media over Quic rendszerben (Multipath MoQ)} 
 
   %\feladatmaga argumentuma a feladat 1-2 bekezdésnyi ismertetése
   \feladatmaga{
@@ -159,19 +159,92 @@
 % \newpage
 \subsection{Bevezető}
 \label{sec:bevezeto}
+%--------------------------------------------------------------------
+\subsubsection{A QUIC protokoll és a multipath adatátvitel}
 
-<Mit kell tudni a feladatról, esetleges elméleti bevezető (nagyon
-értelemszerű dolgokat ne definiáljunk, de jó, ha egy kicsit
-kontextusba kerül a témakör, miért fontos ez nekünk, mi volt eddig,
-milyen megoldások jöhetnek szóba és miért emellett döntöttünk, milyen
-kari nagyobb projektbe kapcsolódik ez), stb. Terjedelem max. 50\%
-beszámolónak.>
+Az internetes multimédiaátvitel technológiai fejlődése során egyre 
+nagyobb igény mutatkozik olyan protokollokra, amelyek képesek 
+rugalmasan és hatékonyan kezelni a valós idejű adatfolyamokat, még 
+változékony és megbízhatatlan hálózati körülmények között is. A QUIC 
+protokoll – mint UDP-alapú, titkosított és kapcsolatorientált 
+transzportprotokoll – alapjaiban újraértelmezi a hálózati kommunikáció 
+lehetőségeit, különösen olyan kiterjesztésekkel, mint a \emph{multipath} 
+adatátvitel. A multipath képesség lehetővé teszi több párhuzamos hálózati 
+útvonal (\textbf{path}) egyidejű vagy váltott használatát egyetlen logikai kapcsolat keretén 
+belül, ami különösen hasznos mobil eszközök, redundáns hálózatok vagy edge 
+hálózati környezetek esetén.
 
-Ennek a résznek az a szerepe, hogy az olvasó számára megmutassa az
-elvégzett munka tágabb környezetét. Ez a rész lehet megegyező tartalmú
-más, ugyanazon a témán dolgozó hallgatókéval, de akkor mindenképpen
-tüntessük fel, hogy kivel dolgoztatok együtt, és hogy pontosan, hogy
-osztottátok meg a munkát.
+A multipath koncepció technikai alapja, hogy a QUIC kapcsolat során nemcsak egy, 
+hanem több \textbf{path}
+hozható létre, amelyeket a transzport réteg párhuzamosan vagy dinamikusan képes használni. 
+Egy \emph{path} definíció szerint egy adott forrás-cél IP-cím és port kombináció, azaz 
+különböző fizikai vagy logikai hálózati kapcsolatok reprezentálása. A PicoQUIC multipath 
+támogatása lehetővé teszi, hogy egy kapcsolat során több ilyen path aktív legyen, és az 
+alkalmazás (quic-et megvalósító rétegében egy belső algoritmus) meghatározza, 
+hogyan ossza meg az adatforgalmat ezek között.
+
+PicoQUIC esetében a multipath kezelés alapvetően decentralizált és eseményvezérelt. 
+A kapcsolat felépítése során egy adott interfészen elindított kapcsolat kiegészíthető 
+további \textbf{PATH CHALLENGE / RESPONSE} üzeneteken keresztül feltérképezett 
+útvonalakkal. Ha egy új path válik elérhetővé (például egy új IP-cím vagy interfész 
+aktiválódik), a rendszer felismeri azt, és lehetőséget biztosít az adatküldés ezen 
+az útvonalon történő elindítására. A path-ok állapotát folyamatosan figyeli a protokoll 
+(RTT, veszteség, állapotváltozás), így lehetővé válik az útvonalak közötti dinamikus 
+váltás vagy forgalommegosztás a kapcsolatok megszakítása nélkül. Ez különösen 
+fontos real-time alkalmazásokban, mivel lehetővé teszi a megszakítás nélküli streamelést 
+még hálózati hiba vagy mobilitás esetén is.
+
+\subsubsection{A Media over QUIC (MoQ) protokoll}
+
+A Media over QUIC (MoQ) egy új, még fejlesztés alatt álló protokollcsalád, 
+amely a QUIC nyújtotta lehetőségekre építve biztosít alacsony késleltetésű, 
+valós idejű médiatovábbítást. A MoQ rendszerében a szerepkörök három alapvető 
+típus köré szerveződnek: a \textbf{Publisher} az, aki a médiatartalmat (például 
+videó vagy hangfolyam) létrehozza és továbbításra bocsátja, a \textbf{Subscriber} 
+a végponti fogyasztó, aki ezt a tartalmat fogadja és feldolgozza/lejátsza, míg a \textbf{Relay} 
+köztes szereplőként funkcionál, amely a számára elérhető tartalmat hirdeti és 
+továbbítja más résztvevők felé, jellemzően a késleltetés, terheléselosztás 
+és elérhetőség optimalizálása érdekében. 
+Ezek a szereplők MoQ session-ökön keresztül kommunikálnak egymással, amelyek 
+strukturált adatfolyamokból (\emph{track}) és egységekből (\emph{object}) épülnek 
+fel, lehetővé téve a médiatartalom rugalmas azonosítását, struktúrálását, és replikációját.
+
+A kidolgozás alatt álló szabvány szerint egy MoQ-alapú rendszerben a relay képes 
+egyszerre több publisher és subscriber felé is kapcsolatot fenntartani, 
+és akár multicast-szerű módon továbbítani a médiatartalmat. 
+A hálózati topológia e szerepkörök között lehet lineáris 
+(Publisher → Relay → Subscriber), vagy elágazó, illetve mesh alapú, ahol több 
+relay dolgozik együtt. Ez a struktúra lehetőséget biztosít a tartalom dinamikus 
+és optimalizált terjesztésére, azonban egyben igényli azt is, hogy a transzport 
+réteg rugalmasan tudjon alkalmazkodni a változó hálózati viszonyokhoz – például 
+egy útvonal meghibásodásához, vagy új alternatív útvonal megjelenéséhez.
+
+\subsubsection{Multipath célja a MoQ-ban}
+
+A multipath működés bevezetése ebbe az architektúrába jelentős előnyt nyújthat, 
+különösen olyan eszközök esetén, amelyek egyszerre több hálózati interfésszel 
+rendelkeznek (például Wi-Fi + mobil adatkapcsolat). A relay-ek és végpontok 
+(subscriber, publisher) több interfésszel rendelkező környezetben 
+történő működése során a multipath támogatás nemcsak a redundanciát növeli, hanem 
+lehetőséget biztosít egyfajta \textbf{hálózati adaptivitásra is}, amely révén például 
+a relay automatikusan kiválaszthatja a legjobb elérhető útvonalat egy adott irányba. 
+Ez az architektúra ideális alapot teremt olyan rendszerek számára, ahol fontos a magas 
+rendelkezésre állás, az alacsony késleltetés és az automatikus hibatűrés.
+
+\subsubsection{Miért a LibQuicR?}
+
+Bár más MoQ fejlesztési irányok is léteznek, azért a LibQuicR könyvtárra esett a
+választás, mert a QUIC protokollt a PicoQUIC könyvtár segítségével implementálja, amely
+jelenleg is folyamatosan bővül, és multpath támogatása is követi a legújabb szabványosítási irányokat.
+
+
+%--------------------------------------------------------------------
+
+%<Mit kell tudni a feladatról, esetleges elméleti bevezető (nagyon értelemszerű dolgokat ne 
+%definiáljunk, de jó, ha egy kicsit kontextusba kerül a témakör, miért fontos ez nekünk, 
+%mi volt eddig, milyen megoldások jöhetnek szóba és miért emellett döntöttünk, milyen kari 
+%nagyobb projektbe kapcsolódik ez), stb. Terjedelem max. 50\% beszámolónak.>
+%Ennek a résznek az a szerepe, hogy az olvasó számára megmutassa az elvégzett munka tágabb környezetét.>
 
 \subsection{Elméleti összefoglaló}
 
