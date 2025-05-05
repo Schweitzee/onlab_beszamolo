@@ -160,6 +160,18 @@
 \subsection{Bevezető}
 \label{sec:bevezeto}
 %--------------------------------------------------------------------
+
+
+%--------------------------------------------------------------------
+
+%<Mit kell tudni a feladatról, esetleges elméleti bevezető (nagyon értelemszerű dolgokat ne 
+%definiáljunk, de jó, ha egy kicsit kontextusba kerül a témakör, miért fontos ez nekünk, 
+%mi volt eddig, milyen megoldások jöhetnek szóba és miért emellett döntöttünk, milyen kari 
+%nagyobb projektbe kapcsolódik ez), stb. Terjedelem max. 50\% beszámolónak.>
+%Ennek a résznek az a szerepe, hogy az olvasó számára megmutassa az elvégzett munka tágabb környezetét.>
+
+\subsection{Elméleti összefoglaló}
+
 \subsubsection{A QUIC protokoll és a multipath adatátvitel}
 
 Az internetes multimédiaátvitel technológiai fejlődése során egyre 
@@ -212,18 +224,24 @@ fel, lehetővé téve a médiatartalom rugalmas azonosítását, struktúrálás
 A kidolgozás alatt álló szabvány szerint egy MoQ-alapú rendszerben a relay képes 
 egyszerre több publisher és subscriber felé is kapcsolatot fenntartani, 
 és akár multicast-szerű módon továbbítani a médiatartalmat. 
-A hálózati topológia e szerepkörök között lehet lineáris 
-(Publisher → Relay → Subscriber), vagy elágazó, illetve mesh alapú, ahol több 
-relay dolgozik együtt. Ez a struktúra lehetőséget biztosít a tartalom dinamikus 
+A hálózati topológia e szerepkörök között rengetegféle lehet, mivel 
+a relayek közötti kapcsolat is támogatva van ami lehetővé teszi
+a tartalom replikációját és elosztását a különböző relayek között. 
+Ezáltal a gazdag struktúrabeli opciók lehetőséget biztosítanak a tartalom dinamikus 
 és optimalizált terjesztésére, azonban egyben igényli azt is, hogy a transzport 
 réteg rugalmasan tudjon alkalmazkodni a változó hálózati viszonyokhoz – például 
 egy útvonal meghibásodásához, vagy új alternatív útvonal megjelenéséhez.
+
+\subsubsection{MoQ és a multipath jelenlegi állapota}
+
+A MoQ protokoll jelenlegi állapota még fejlesztés alatt áll, és jelenleg egyik implementáció
+sem támogatja a multipath képességeket.
 
 \subsubsection{Multipath célja a MoQ-ban}
 
 A multipath működés bevezetése ebbe az architektúrába jelentős előnyt nyújthat, 
 különösen olyan eszközök esetén, amelyek egyszerre több hálózati interfésszel 
-rendelkeznek (például Wi-Fi + mobil adatkapcsolat). A relay-ek és végpontok 
+rendelkeznek (például Wi-Fi és mobil adatkapcsolat szimultán használata). A relay-ek és végpontok 
 (subscriber, publisher) több interfésszel rendelkező környezetben 
 történő működése során a multipath támogatás nemcsak a redundanciát növeli, hanem 
 lehetőséget biztosít egyfajta \textbf{hálózati adaptivitásra is}, amely révén például 
@@ -237,56 +255,45 @@ Bár más MoQ fejlesztési irányok is léteznek, azért a LibQuicR könyvtárra
 választás, mert a QUIC protokollt a PicoQUIC könyvtár segítségével implementálja, amely
 jelenleg is folyamatosan bővül, és multpath támogatása is követi a legújabb szabványosítási irányokat.
 
-
-%--------------------------------------------------------------------
-
-%<Mit kell tudni a feladatról, esetleges elméleti bevezető (nagyon értelemszerű dolgokat ne 
-%definiáljunk, de jó, ha egy kicsit kontextusba kerül a témakör, miért fontos ez nekünk, 
-%mi volt eddig, milyen megoldások jöhetnek szóba és miért emellett döntöttünk, milyen kari 
-%nagyobb projektbe kapcsolódik ez), stb. Terjedelem max. 50\% beszámolónak.>
-%Ennek a résznek az a szerepe, hogy az olvasó számára megmutassa az elvégzett munka tágabb környezetét.>
-
-\subsection{Elméleti összefoglaló}
-
-Amikor a tágabb tudományos vagy műszaki környezetről beszélünk, akkor
-azt értjük alatta, hogy ,,művelt laikus'' -- alapesetben ennek
-tekinthető a tárgyfelelős -- megtalálja azokat a kapcsolódási
-pontokat, amelyek segítségével az ő ismereteihez a beszámolóban
-tárgyalt témakör és az elvégzett munka csatlakoztatható.  Ez
-mindenképpen, szükséges, hiszen enélkül az olvasónak előzetes
-tájékozódást kellene végeznie a szűkebb szakterületen, hogy az
-elvégzett munka jellegét, súlyát, nehézségét meg tudja ítélni.
-
-Természetesen a terjedelmi korlátok miatt nem lehet teljes mértékben
-bemutatni az adott szűkebb szakterületet, ezért meg kell adni az
-érdeklődő olvasónak a lehetőséget a további tájékozódásra.  Részben
-erre szolgálnak a hivatkozások\footnote{A másik nagyon fontos céljuk
-  az állítások alátámasztása.  A lábjegyzetek használatát egyébként
-  nem érdemes túlzásba vinni, mert állandóan megtörik az olvasás
-  folyamatát (lásd például \cite{esterhazy}).  Akkor kell használni,
-  amikor a lábjegyzetben közlendő információ érdekes lehet, de nem
-  tartozik közvetlenül a tárgyhoz.  Mindenképpen kerülendő az irodalmi
-  hivatkozások lábjegyzetben való megadása.}, lábjegyzetek.
-
-Nagyon fontos, hogy abban az esetben, amikor a hallgató féléves
-munkájának egy része vagy egésze az, hogy tanul, hogy maga is
-ismerkedik azzal a szakterülettel, amelyen dolgozni fog, akkor az
-tudatosan törekedjen arra, hogy az Elméleti összefoglaló és az
-Elvégzett munka ismertetése szétválasztható legyen.  Az előbbinek a
-szakterület alapvető, általános ismereteit kell tartalmaznia,
-amelyekről a ,,művelt laikusnak'' részleges ismeretei lehetnek.  Míg
-az elvégzett munka leírásába azoknak a specifikus ismereteknek a
-bemutatása kerülhet, amelyek a később elvégzett vagy elvégzendő
-feladatokat konkrétan megalapozzák.
-
-További tanulmányozásra ajánljuk Eco professzor művét~\cite{eco}.
-
-A hivatkozások kezelésénél fontos, hogy mindig a mondat részeként
-tekintsünk rá, és ha szükséges, akár többször is hivatkozzunk meg egy
-forrást, de az első előfordulásakor mindenképpen.  Ugyanez érvényes a
-rövidítésekre: minden rövidítést a legelső előforduláskor magyarázni
-kell, később viszont használhatók a rövidített formák is.  Például: a
-Tiger Tree Hash (TTH) a hashelés egy speciális formája.
+% Amikor a tágabb tudományos vagy műszaki környezetről beszélünk, akkor
+% azt értjük alatta, hogy ,,művelt laikus'' -- alapesetben ennek
+% tekinthető a tárgyfelelős -- megtalálja azokat a kapcsolódási
+% pontokat, amelyek segítségével az ő ismereteihez a beszámolóban
+% tárgyalt témakör és az elvégzett munka csatlakoztatható.  Ez
+% mindenképpen, szükséges, hiszen enélkül az olvasónak előzetes
+% tájékozódást kellene végeznie a szűkebb szakterületen, hogy az
+% elvégzett munka jellegét, súlyát, nehézségét meg tudja ítélni.
+% 
+% Természetesen a terjedelmi korlátok miatt nem lehet teljes mértékben
+% bemutatni az adott szűkebb szakterületet, ezért meg kell adni az
+% érdeklődő olvasónak a lehetőséget a további tájékozódásra.  Részben
+% erre szolgálnak a hivatkozások\footnote{A másik nagyon fontos céljuk
+%   az állítások alátámasztása.  A lábjegyzetek használatát egyébként
+%   nem érdemes túlzásba vinni, mert állandóan megtörik az olvasás
+%   folyamatát (lásd például \cite{esterhazy}).  Akkor kell használni,
+%   amikor a lábjegyzetben közlendő információ érdekes lehet, de nem
+%   tartozik közvetlenül a tárgyhoz.  Mindenképpen kerülendő az irodalmi
+%   hivatkozások lábjegyzetben való megadása.}, lábjegyzetek.
+% 
+% Nagyon fontos, hogy abban az esetben, amikor a hallgató féléves
+% munkájának egy része vagy egésze az, hogy tanul, hogy maga is
+% ismerkedik azzal a szakterülettel, amelyen dolgozni fog, akkor az
+% tudatosan törekedjen arra, hogy az Elméleti összefoglaló és az
+% Elvégzett munka ismertetése szétválasztható legyen.  Az előbbinek a
+% szakterület alapvető, általános ismereteit kell tartalmaznia,
+% amelyekről a ,,művelt laikusnak'' részleges ismeretei lehetnek.  Míg
+% az elvégzett munka leírásába azoknak a specifikus ismereteknek a
+% bemutatása kerülhet, amelyek a később elvégzett vagy elvégzendő
+% feladatokat konkrétan megalapozzák.
+% 
+% További tanulmányozásra ajánljuk Eco professzor művét~\cite{eco}.
+% 
+% A hivatkozások kezelésénél fontos, hogy mindig a mondat részeként
+% tekintsünk rá, és ha szükséges, akár többször is hivatkozzunk meg egy
+% forrást, de az első előfordulásakor mindenképpen.  Ugyanez érvényes a
+% rövidítésekre: minden rövidítést a legelső előforduláskor magyarázni
+% kell, később viszont használhatók a rövidített formák is.  Például: a
+% Tiger Tree Hash (TTH) a hashelés egy speciális formája.
 
 \subsection{A munka állapota, készültségi foka a félév elején}
 \label{sec:munka-allap-kesz}
