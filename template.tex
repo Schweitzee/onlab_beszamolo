@@ -198,7 +198,7 @@ hozzájárul a végfelhasználói élmény javításához is.
 \subsection{Elméleti összefoglaló}
 
 \subsubsection{A QUIC protokoll}
-
+\paragraph{}
 Az internetes multimédiaátvitel technológiai fejlődése során egyre 
 nagyobb igény mutatkozik olyan protokollokra, amelyek képesek 
 rugalmasan és hatékonyan kezelni a valós idejű adatfolyamokat, még 
@@ -213,7 +213,7 @@ hálózati környezetek esetén.
 
 
 \subsubsection{QUIC multipath alapjaiban}
-
+\paragraph{}
 A multipath koncepció technikai alapja, hogy a QUIC kapcsolat során nemcsak egy, 
 hanem több \textbf{path}
 hozható létre, amelyeket a transzport réteg párhuzamosan vagy dinamikusan képes használni. 
@@ -222,7 +222,7 @@ különböző fizikai vagy logikai hálózati kapcsolatok reprezentálása. A Pi
 támogatása lehetővé teszi, hogy egy kapcsolat során több ilyen path aktív legyen, és az 
 alkalmazás (quic-et megvalósító rétegében egy belső algoritmus) meghatározza, 
 hogyan ossza meg az adatforgalmat ezek között \cite{pico_git}.
-
+\paragraph{}
 PicoQUIC esetében a multipath kezelés alapvetően decentralizált és eseményvezérelt. 
 A kapcsolat felépítése során egy adott interfészen elindított kapcsolat kiegészíthető 
 további \textbf{PATH CHALLENGE / RESPONSE} (útvonal próba / útvonal válasz) üzeneteken keresztül feltérképezett 
@@ -235,6 +235,7 @@ fontos real-time alkalmazásokban, mivel lehetővé teszi a megszakítás nélk�
 még hálózati hiba vagy mobilitás esetén is.
 
 \subsubsection{A Media over QUIC (MoQ) protokoll}
+\paragraph{}
 
 A Media over QUIC (MoQ) (Médiaátvitel QUIC felett) egy új, még fejlesztés alatt álló protokollcsalád \cite{moq_draft}, 
 amely a QUIC nyújtotta lehetőségekre építve biztosít alacsony késleltetésű, 
@@ -249,6 +250,7 @@ Ezek a szereplők MoQ session-ökön keresztül kommunikálnak egymással, amely
 strukturált adatfolyamokból (\emph{track}) és egységekből (\emph{object}) épülnek 
 fel, lehetővé téve a médiatartalom rugalmas azonosítását, struktúrálását, és replikációját.
 
+\paragraph{}
 A kidolgozás alatt álló szabvány szerint egy MoQ-alapú rendszerben a relay képes 
 egyszerre több publisher és subscriber felé is kapcsolatot fenntartani, 
 és akár multicast-szerű módon továbbítani a médiatartalmat. 
@@ -261,7 +263,7 @@ réteg rugalmasan tudjon alkalmazkodni a változó hálózati viszonyokhoz – p
 egy útvonal meghibásodásához, vagy új alternatív útvonal megjelenéséhez.
 
 \subsubsection{Multipath célja a MoQ-ban}
-
+\paragraph{}
 A multipath működés bevezetése ebbe az architektúrába jelentős előnyt nyújthat, 
 különösen olyan eszközök esetén, amelyek egyszerre több hálózati interfésszel 
 rendelkeznek (például Wi-Fi és mobil adatkapcsolat szimultán használata). A relay-ek és végpontok 
@@ -273,20 +275,20 @@ Ez az architektúra ideális alapot teremt olyan rendszerek számára, ahol font
 rendelkezésre állás, az alacsony késleltetés és az automatikus hibatűrés.
 
 \subsubsection{MoQ és a multipath jelenlegi állapota}
-
+\paragraph{}
 A MoQ protokoll jelenlegi állapota még fejlesztés alatt áll, és jelenleg egyik implementáció
 sem támogatja a multipath képességeket, emiatt is újszerű és érdekes feladat
 a LibQuicR \cite{libquicr}(MoQ fejlesztési irány) könyvtárba a multipath képességek bevezetése.
 
 \subsubsection{Miért a LibQuicR?}
-
+\paragraph{}
 Bár más MoQ fejlesztési irányok is léteznek, azért a LibQuicR könyvtárra esett a
 választás, mert a QUIC protokollt a PicoQUIC könyvtár segítségével implementálja, amely
 jelenleg is folyamatosan bővül, és multpath támogatása is követi a legújabb szabványosítási irányokat.
 
 \subsection{A munka állapota, készültségi foka a félév elején}
 \label{sec:munka-allap-kesz}
-
+\paragraph{}
 A munka félév kezdeti állapota röviden összefoglalható azzal, 
 hogy saját tapasztalatom nem volt sem a QUIC protokollal, sem a LibQuicR
 kódjával kapcsolatban, valamint a téma is új, tehát nem volt mire építeni.
@@ -303,20 +305,20 @@ kódjával kapcsolatban, valamint a téma is új, tehát nem volt mire építeni
 
 \subsubsection{Mininet szomulációs környezet}
 
- \subparagraph{}
+ \paragraph{}
 
 Mininet használata elengedhetetlen volt, hiszen csak egy kontrollált környezetben 
 lehet érdemben tesztelni a multipath működést, és a mininet 
 egy virtuális hálózati környezetet biztosít, amely lehetővé teszi a különböző 
-hálózati topológiák és viszonyok szimulálását. A mininet segítségével könnyen 
+hálózati topológiák és viszonyok szimulálását. 
+A mininet segítségével könnyen 
 létrehozhatók virtuális gépek (továbbiakban hostok vagy h1/h2/h..), 
 amelyek tulajdonképpen a futtató gépen létrehozott hálózati névterek, amelyeken virtuális
 hálózati interfészeket és azokhoz hálózati konfigurációt rendelhetünk.
-Ezekben a névterekben lehet futtatni a kívánt programokat, tesztelve 
+Ezekben a névterekben lehet futtatni a tesztelni és megfigyelni kívánt programokat.
 A mininet emellett lehetővé teszi a hálózati topológia 
 szimuláció közbeni megváltoztatását is, így kapcsolatok megszűnését 
 is könnyen szimulálhatjuk vele.
-
 
 Az alábbi topológiát hoztam létre a mininet segítségével, amellyel a multipath működését teszteltem (1. ábra):
 
@@ -334,15 +336,24 @@ A hostok és a router között azért van szükség switch-ekre,
 mert a kapcsolatok szimuláció közbeni megszakítása problematikus, ha a megváltoztatott kapcsolat közvetlenül a host-okhoz csatlakozik.
 Így az alábbi topológián egy switch és a router közötti kapcsolat megszakításával könnyen lehet szimulálni a kapcsolat megszakadását.
 
+Címzés szempontjából a hostok eltérő alhálózatokban vannak, (a h1-nek még emellett 
+mindhárom interfésze eltérő alhálózatban van, hogy az alapértelmezett átjáró eltérő lehessen, ezzel pontosabban szimulálva a valós környezetet),
+
+\paragraph{}
+A munkát és a tesztelést felgyorsítva mindezt egy Python szkript segítségével automatizálni lehet, 
+amely a mininet API-ját használja a virtuális gépek és kapcsolatok létrehozására, konfigurálására, kezelésére, beleértve
+a hostokon futtatott demonstrációs programokat és a wireshark csomagelkapást is.
+
+Tehát egy script futtatásával pillanatok alatt megfigyelhető a kívánt program működése.
+
 \subsubsection{Megismerkedás a picoQUIC könyvtárral}
 
 \subparagraph{}
-A féléves munka kezdetén első célom az volt, hogy alaposan megismerjem a 
-PicoQUIC könyvtárat, mivel ez képezte a későbbi 
-fejlesztések technikai alapját. A PicoQUIC egy könnyűsúlyú, C nyelven írt, kutatási 
-célokra is jól használható implementáció. A megismerés első lépése a hivatalos példaprogramok 
-tanulmányozása és futtatása volt, melyek segítettek megérteni a könyvtár felépítését, 
-működési modelljét, de különösen a multpath kezelés módjait.
+A féléves munka kezdetén első célom az volt, 
+hogy alaposan megismerjem a PicoQUIC könyvtárat, mivel ez képezte a későbbi 
+fejlesztések technikai alapját. A megismerés legfontosabb lépése a hivatalos példaprogram
+tanulmányozása és futtatása volt, ami segített megérteni a könyvtár felépítését, 
+működését, de különösen a multpath kezelés módjait.
 
 Maga a \textbf{példaprogram felépítése} elég egyszerű, olyan értelemben hogy ez egy darab '.c' fájl, amely a picoQUIC függvényeit használja, 
 és a szerver, valamint a kliensek funkcióit is ellátja egyaránt. 
@@ -382,38 +393,45 @@ a LibQuicR könyvtárban való implementálásához.
 Munkám során elég korán előjött a kérdés, hogy hogyan tudom a picoQUIC működését elemezni, mivel
 a tényleges működést nehéz folyamatában nyomon követni, hasznos lenne picoQUIC kapcsolatot menedzselő adatfolyamot is látni.
 
-Bár a picoQUIC rengeteg funkciót és metrikát biztosít a működés elemzésére, 
-beépítetten a qlog formátumú naplózást is támogatja, ez tulajodnképpen egy JSON-t generál a kapcsolat mindkét végén, ha megfelelő paraméterrel indítjuk el a picoquicdemo-t.
-A qlog formátumot a QUIC és HTTP/3 protokollokhoz tervezték, célja, hogy strukturált és gépileg olvasható formátumban rögzítse a QUIC kapcsolatok eseményeit és metrikáit.
+A picoQUIC rengeteg funkciót és metrikát biztosít a működés elemzésére, 
+például beépítve támogatja a qlog \footnote{A qlog formátumot a QUIC és 
+HTTP/3 protokollokhoz tervezték, célja, hogy strukturált és gépileg 
+olvasható formátumban rögzítse a QUIC kapcsolatok eseményeit és metrikáit.}
+formátumban történő naplózást, ami tulajodnképpen egy JSON-t generál a kapcsloat azon végén ahol megfelelő paraméterekkel indítjuk el a picoquicdemo-t.
+Ez a fájl tartalmazza minden adatot amely a kapcsolat során történik, beleértve a csomagok küldését és fogadását,
+a kapcsolat állapotát, a késleltetéseket és a hibákat is.
+
 Bár hasznos volt eleinte a protokoll megértése szempontjából, a qlog formátum nem minden esetben elegendő, mivel a QUIC protokoll
 sokféle eseményt és metrikát generál, amelyek közül sok nem feltétlenül releváns a 
 multipath működés szempontjából és maga a multipath is megnehezíti mivel az egyetlen 
 qlog vizualizáló amit találtam az a qvis \footnote{qvis: webes alkalmazás, amely a qlog 
 fájlok vizualizálására szolgál, és sajnos a multipath használata könnyen eltorzítja a két oldal 
-kapcsolatainak szinkronizációját} volt, ami nem tudja könnyen átláthatóan kezelni a multipath eseményeket, 
-így ezzel nem tudtam elegendően mélyrehatóan elemezni a kapcsolatokat.
+kapcsolatának a szinkronizációját.} volt, ami sajnos nem tudja könnyen és átláthatóan kezelni a multipath eseményeket, 
+így ezzel nem tudtam megfelelően elemezni a kapcsolatokat.
 
-Ezt kiváltandó a wireshark program választása sokkal hasznsabbnak bizonyult, mivel
-a QUIC protokollt is támogatja. Azonban ez annyival nehézkesebb a qlog-nál, hogy míg a 
-qlog fájlokat a program maga generálja, tehát a titkosítást ki tudja kerülni, addig a wireshark magukat a hálózati interfészen 
-megjelenő csomagokat rögzíti, így a QUIC csomagok titkosítása megnehezítette a folyamatot, főleg a multipath miatt, mivel a
-másodlagos útvonalon küldött és fogadott csomagokat a wireshark nem tudja hozzákötni automatikusan az első útvonal interfészén létrejött kapcsolat titkosított csomagjaihoz.
+\paragraph{}
+Ezt a nehézséget kiváltandó a wireshark program választása sokkal hasznosabbnak bizonyult, mivel
+a QUIC protokollt is támogatja, illetve tanulmányaim során is találkoztam már vele. 
+Azonban ez olyan kihívást állít a qlog-gal szemben, hogy míg a 
+qlog fájlokat a program maga generálja, tehát a titkosítást ki tudja kerülni, 
+addig a wireshark magukat a hálózati interfészen megjelenő csomagokat rögzíti, 
+így a QUIC csomagok titkosítása megnehezítette a folyamatot, főleg a multipath 
+miatt, mivel a másodlagos útvonalon küldött és fogadott csomagokat a wireshark 
+nem tudja hozzákötni automatikusan az első útvonal interfészén létrejött kapcsolat titkosított csomagjaihoz.
 
-Szerencsére a picoQUIC beépítetten támogatja a ssl keylog fájlok generálását, amelyekkel fel lehet oldani a quic által használt tls titkosítást,
-így a wireshark képes dekódolni a csomagokat, és megjeleníteni azok tartalmát (legalábbis a kapcsolat kezeléséért felelős quic réteg szempontjából).
+Szerencsére a picoQUIC beépítetten támogatja a ssl keylog fájlok generálását környezeti változók 
+segítségével, amelyekkel fel lehet oldani a quic által használt tls titkosítást,
+így a wireshark képes dekódolni a csomagokat, és megjeleníteni azok 
+tartalmát (legalábbis a kapcsolat kezeléséért felelős quic réteg szempontjából).
 
 
 \subsubsection{libquicr felépítése és átalakítása}
+\paragraph{}
+
+
+
 
 \subsubsection{Elvégzett munka eredményei}
-
-
-
-
-Maga a picoQUIC könyvtár a QUIC protokoll implementációja, amely szerencsére
-kifejezetten előrehaladott, és sokféle multipath funkciót támogat, különösen 
-a könyvtár részét képző \textbf{picoquicdemo} nevű demóprogram.
-
 
 
 <Én magam (nem a társam) a félév során következőket olvastam el /

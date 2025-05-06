@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1746570736.43966 "/home/schweitzer/Documents/onlab/onlab_beszamolo/template.tex" "template.pdf" "template" 1746570737.00055 0
+["pdflatex"] 1746573365.76682 "/home/schweitzer/Documents/onlab/onlab_beszamolo/template.tex" "template.pdf" "template" 1746573366.23984 0
   "/etc/texmf/web2c/texmf.cnf" 1746205048.55152 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/schweitzer/Documents/onlab/onlab_beszamolo/template.tex" 1746570735.62436 35954 ea5e4f52cd3caf5d0524e41aa8ba6864 ""
+  "/home/schweitzer/Documents/onlab/onlab_beszamolo/template.tex" 1746573365.08843 36778 98376957df50d3ffbe09ef57eff7b1fd ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/courier/pcrb8r.tfm" 1136768653 1292 3059476c50a24578715759f22652f3d0 ""
@@ -108,9 +108,9 @@
   "figs/topo.png" 1746568549.30706 115129 29bded59e981228e0a776042e15242b9 ""
   "magyar.ldf" 1320660288 245943 e53970476a069449afc196d90bc7bfbe ""
   "onlabmacros.tex" 1510842380 2078 e8257a7345f44c6f490605642acfc350 ""
-  "template.aux" 1746570736.9574 6508 4cd4c95be5032a5c34143b5db0682209 "pdflatex"
-  "template.out" 1746570736.9584 5143 165460058d5a9dee654673657b7cca20 "pdflatex"
-  "template.tex" 1746570735.62436 35954 ea5e4f52cd3caf5d0524e41aa8ba6864 ""
+  "template.aux" 1746573366.19246 7832 c67f1dcd7d0e1535f09e18b4901560d1 "pdflatex"
+  "template.out" 1746573366.19346 5143 165460058d5a9dee654673657b7cca20 "pdflatex"
+  "template.tex" 1746573365.08843 36778 98376957df50d3ffbe09ef57eff7b1fd ""
   (generated)
   "template.aux"
   "template.log"
