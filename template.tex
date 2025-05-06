@@ -299,6 +299,40 @@ kódjával kapcsolatban, valamint a téma is új, tehát nem volt mire építeni
 
 \subsection{A munkám ismertetése logikus fejezetekre tagoltan}
 \label{sec:a-munkam-ismert}
+%--------------------------------------------------------------------
+
+\subsubsection{Mininet szomulációs környezet}
+
+ \subparagraph{}
+
+Mininet használata elengedhetetlen volt, hiszen csak egy kontrollált környezetben 
+lehet érdemben tesztelni a multipath működést, és a mininet 
+egy virtuális hálózati környezetet biztosít, amely lehetővé teszi a különböző 
+hálózati topológiák és viszonyok szimulálását. A mininet segítségével könnyen 
+létrehozhatók virtuális gépek (továbbiakban hostok vagy h1/h2/h..), 
+amelyek tulajdonképpen a futtató gépen létrehozott hálózati névterek, amelyeken virtuális
+hálózati interfészeket és azokhoz hálózati konfigurációt rendelhetünk.
+Ezekben a névterekben lehet futtatni a kívánt programokat, tesztelve 
+A mininet emellett lehetővé teszi a hálózati topológia 
+szimuláció közbeni megváltoztatását is, így kapcsolatok megszűnését 
+is könnyen szimulálhatjuk vele.
+
+
+Az alábbi topológiát hoztam létre a mininet segítségével, amellyel a multipath működését teszteltem (1. ábra):
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[width=12cm]{topo}
+\caption{A mininetben létrehozott topológia}
+\end{figure}
+ 
+Ahogy említettem a h1, h2, h3 jelölik a hostokat, s0-s5 jelölik a switch-eket (kapcsolókat), és r0 jelöli a routert (útválasztót).
+h1 három interfésszel rendelkezik, egyenként csatlakozik a s0, s1 és s2 switch-ekhez, azok pedig a r0 routerhez.
+Hasonlóan h2 is, csak egy interfésszel, a h3 pedig kettővel csatlakozik.
+
+A hostok és a router között azért van szükség switch-ekre,
+mert a kapcsolatok szimuláció közbeni megszakítása problematikus, ha a megváltoztatott kapcsolat közvetlenül a host-okhoz csatlakozik.
+Így az alábbi topológián egy switch és a router közötti kapcsolat megszakításával könnyen lehet szimulálni a kapcsolat megszakadását.
 
 \subsubsection{Megismerkedás a picoQUIC könyvtárral}
 
@@ -341,31 +375,9 @@ mivel amíg az nem működik megfelelően, addig a többi nem is igazán tesztel
 Szerencsére az ezt ellátó kódrészlet a picoquicdemo-ban jól elkülönül, így jó alapot is képzett
 a LibQuicR könyvtárban való implementálásához.
 
-\subsubsection{Mininet}
-
-PicoQUIC elemzése és megértése mellett a mininet használata is 
-elengedhetetlen volt, hiszen csak egy kontrollált környezetben 
-lehet érdemben tesztelni a multipath működést, és a mininet 
-egy virtuális hálózati környezetet biztosít, amely lehetővé teszi a különböző 
-hálózati topológiák és viszonyok szimulálását. A mininet segítségével könnyen 
-létrehozhatók virtuális gépek (továbbiakban hostok vagy h1/h2/h..), 
-amelyek különböző hálózati interfészekkel rendelkeznek, 
-és ezeket a virtuális gépeket összekapcsolva különböző topológiák 
-hozhatók létre. A mininet emellett lehetővé teszi a hálózati topológia 
-szimuláció közbeni megváltoztatását is, így kapcsolatok megszűnését 
-is könnyen szimulálhatjuk vele.
-
-Az alábbi topológiát hoztam létre a mininet segítségével, amellyel a multipath működését teszteltem (1. ábra):
-\begin{figure}[h]
-    \centering
-      \includegraphics[width=12cm]{topo}
-  \caption{A mininet által létrehozott topológia}
-  \end{figure}
-
+\subsubsection{Működés elemzésének módjai}
 
 \subparagraph{}
-
-\subsubsection{Működés elemzésének módjai}
 
 Munkám során elég korán előjött a kérdés, hogy hogyan tudom a picoQUIC működését elemezni, mivel
 a tényleges működést nehéz folyamatában nyomon követni, hasznos lenne picoQUIC kapcsolatot menedzselő adatfolyamot is látni.
