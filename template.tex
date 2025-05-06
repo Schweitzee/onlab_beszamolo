@@ -303,7 +303,7 @@ kódjával kapcsolatban, valamint a téma is új, tehát nem volt mire építeni
 \subsubsection{Megismerkedás a picoQUIC könyvtárral}
 
 \subparagraph{}
-A féléves munka kezdetén elsődleges célom az volt, hogy alaposan megismerjem a 
+A féléves munka kezdetén első célom az volt, hogy alaposan megismerjem a 
 PicoQUIC könyvtárat, mivel ez képezte a későbbi 
 fejlesztések technikai alapját. A PicoQUIC egy könnyűsúlyú, C nyelven írt, kutatási 
 célokra is jól használható implementáció. A megismerés első lépése a hivatalos példaprogramok 
@@ -341,23 +341,55 @@ mivel amíg az nem működik megfelelően, addig a többi nem is igazán tesztel
 Szerencsére az ezt ellátó kódrészlet a picoquicdemo-ban jól elkülönül, így jó alapot is képzett
 a LibQuicR könyvtárban való implementálásához.
 
+\subsubsection{Mininet}
+
+PicoQUIC elemzése és megértése mellett a mininet használata is 
+elengedhetetlen volt, hiszen csak egy kontrollált környezetben 
+lehet érdemben tesztelni a multipath működést, és a mininet 
+egy virtuális hálózati környezetet biztosít, amely lehetővé teszi a különböző 
+hálózati topológiák és viszonyok szimulálását. A mininet segítségével könnyen 
+létrehozhatók virtuális gépek (továbbiakban hostok vagy h1/h2/h..), 
+amelyek különböző hálózati interfészekkel rendelkeznek, 
+és ezeket a virtuális gépeket összekapcsolva különböző topológiák 
+hozhatók létre. A mininet emellett lehetővé teszi a hálózati topológia 
+szimuláció közbeni megváltoztatását is, így kapcsolatok megszűnését 
+is könnyen szimulálhatjuk vele.
+
+Az alábbi topológiát hoztam létre a mininet segítségével, amellyel a multipath működését teszteltem (1. ábra):
+\begin{figure}[h]
+    \centering
+      \includegraphics[width=12cm]{topo}
+  \caption{A mininet által létrehozott topológia}
+  \end{figure}
+
+
+\subparagraph{}
+
 \subsubsection{Működés elemzésének módjai}
 
-Bár a picoQUIC beépítetten rengeteg funkciót és metrikát biztosít a működés elemzésére,
+Munkám során elég korán előjött a kérdés, hogy hogyan tudom a picoQUIC működését elemezni, mivel
+a tényleges működést nehéz folyamatában nyomon követni, hasznos lenne picoQUIC kapcsolatot menedzselő adatfolyamot is látni.
 
--wireshark
+Bár a picoQUIC rengeteg funkciót és metrikát biztosít a működés elemzésére, 
+beépítetten a qlog formátumú naplózást is támogatja, ez tulajodnképpen egy JSON-t generál a kapcsolat mindkét végén, ha megfelelő paraméterrel indítjuk el a picoquicdemo-t.
+A qlog formátumot a QUIC és HTTP/3 protokollokhoz tervezték, célja, hogy strukturált és gépileg olvasható formátumban rögzítse a QUIC kapcsolatok eseményeit és metrikáit.
+Bár hasznos volt eleinte a protokoll megértése szempontjából, a qlog formátum nem minden esetben elegendő, mivel a QUIC protokoll
+sokféle eseményt és metrikát generál, amelyek közül sok nem feltétlenül releváns a 
+multipath működés szempontjából és maga a multipath is megnehezíti mivel az egyetlen 
+qlog vizualizáló amit találtam az a qvis \footnote{qvis: webes alkalmazás, amely a qlog 
+fájlok vizualizálására szolgál, és sajnos a multipath használata könnyen eltorzítja a két oldal 
+kapcsolatainak szinkronizációját} volt, ami nem tudja könnyen átláthatóan kezelni a multipath eseményeket, 
+így ezzel nem tudtam elegendően mélyrehatóan elemezni a kapcsolatokat.
 
---sslkeylog
+Ezt kiváltandó a wireshark program választása sokkal hasznsabbnak bizonyult, mivel
+a QUIC protokollt is támogatja. Azonban ez annyival nehézkesebb a qlog-nál, hogy míg a 
+qlog fájlokat a program maga generálja, tehát a titkosítást ki tudja kerülni, addig a wireshark magukat a hálózati interfészen 
+megjelenő csomagokat rögzíti, így a QUIC csomagok titkosítása megnehezítette a folyamatot, főleg a multipath miatt, mivel a
+másodlagos útvonalon küldött és fogadott csomagokat a wireshark nem tudja hozzákötni automatikusan az első útvonal interfészén létrejött kapcsolat titkosított csomagjaihoz.
 
-\subsubsection{mininet}
+Szerencsére a picoQUIC beépítetten támogatja a ssl keylog fájlok generálását, amelyekkel fel lehet oldani a quic által használt tls titkosítást,
+így a wireshark képes dekódolni a csomagokat, és megjeleníteni azok tartalmát (legalábbis a kapcsolat kezeléséért felelős quic réteg szempontjából).
 
-altémák:
-
-- maga a mininet
-
-- topológia és miért úgy ahogy
-
-- Tesztelés gyorsítása mininet segítségével
 
 \subsubsection{libquicr felépítése és átalakítása}
 
@@ -620,6 +652,8 @@ helyzetben elfogadható!
 %==================================================================
 \subsection{A csatlakozó dokumentumok jegyzéke}
 \label{sec:csat-irod}
+
+https://graphonline.top/
 
 <A munka ezen beszámolóba be nem fért eredményeinek (például a forrás
 fájlok, mindenképpen csatolni akart forráskód részlet, felhasználói
