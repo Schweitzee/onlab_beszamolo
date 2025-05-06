@@ -127,7 +127,7 @@
   \feladatmaga{
     A LibQuicR multimédiás adatátviteli 
   könyvtár módosítása oly módon, hogy az képes legyen kihasználni a 
-  multipath adatátviteli képességeket, amelyeket a PicoQUIC nevű, 
+  multipath (többutas) adatátviteli képességeket, amelyeket a PicoQUIC nevű, 
   QUIC protokolt megvalósító könyvtár biztosít. A munka során
   során a LibQuicR transzport rétegét úgy kell átalakítani, 
   hogy az egy kapcsolaton belül több hálózati útvonal létesítésére 
@@ -160,7 +160,32 @@
 \subsection{Bevezető}
 \label{sec:bevezeto}
 %--------------------------------------------------------------------
+Napjainkban az internetes adatforgalom egyre jelentősebb részét különféle médiatartalmak – 
+elsősorban videók és élő közvetítések – teszik ki. Egyes kutatások szerint 
+szerint az internetes forgalom 65\%-a ilyen típusú tartalom lehet \cite{live_stats}. 
+Ezek hatékony és megbízható továbbítása azonban komoly 
+technológiai kihívást jelent, különösen akkor, ha a felhasználói élményt is 
+figyelembe vesszük: az alacsony késleltetés, a megszakításmentes lejátszás 
+és a biztonságos adatátvitel alapvető elvárások.
 
+E kihívásokra jött létre válaszként a QUIC protokoll, amely UDP-alapú, alacsony 
+késleltetésű, titkosított és megbízható adatátvitelt tesz lehetővé. Erre épülve 
+fejlődik jelenleg a Media over QUIC (MoQ) szabvány is, amely kifejezetten 
+médiatartalmak hatékony továbbítását célozza a QUIC képességeit kihasználva.
+
+Ezzel párhuzamosan a felhasználói eszközök – különösen a mobiltelefonok és 
+laptopok – egyre gyakrabban rendelkeznek több hálózati interfésszel (például Wi-Fi és 5G). 
+Mégis gyakran tapasztalható kapcsolatmegszakadás, hosszú töltési idők vagy éppenséggel 
+elérhetetlenné váló szolgáltatások, ha az egyik kapcsolat megszakad vagy instabillá 
+válik. A multipath adatátvitel lehetőséget kínál ezen problémák áthidalására azáltal, 
+hogy párhuzamosan több hálózati útvonalat használ az adatok továbbítására, növelve 
+ezzel a robusztusságot és az elérhető sávszélességet.
+
+A jelen munka célja ezen két technológia – a médiatartalmakra optimalizált QUIC-alapú 
+továbbítás és a multipath kommunikáció – egyesítése. A cél egy olyan rendszer bemutatása, 
+amely képes több útvonalat kihasználva, élő adatfolyamot hatékonyan és megbízhatóan 
+továbbítani. Ez nemcsak a hálózati erőforrások jobb kihasználását segíti elő, hanem 
+hozzájárul a végfelhasználói élmény javításához is.
 
 %--------------------------------------------------------------------
 
@@ -172,19 +197,22 @@
 
 \subsection{Elméleti összefoglaló}
 
-\subsubsection{A QUIC protokoll és a multipath adatátvitel}
+\subsubsection{A QUIC protokoll}
 
 Az internetes multimédiaátvitel technológiai fejlődése során egyre 
 nagyobb igény mutatkozik olyan protokollokra, amelyek képesek 
 rugalmasan és hatékonyan kezelni a valós idejű adatfolyamokat, még 
-változékony és megbízhatatlan hálózati körülmények között is. A QUIC 
+változékony és megbízhatatlan hálózati körülmények között is. \cite{quic} A QUIC 
 protokoll – mint UDP-alapú, titkosított és kapcsolatorientált 
 transzportprotokoll – alapjaiban újraértelmezi a hálózati kommunikáció 
 lehetőségeit, különösen olyan kiterjesztésekkel, mint a \emph{multipath} 
-adatátvitel. A multipath képesség lehetővé teszi több párhuzamos hálózati 
+adatátvitel \cite{mp_quic}. A multipath képesség lehetővé teszi több párhuzamos hálózati 
 útvonal (\textbf{path}) egyidejű vagy váltott használatát egyetlen logikai kapcsolat keretén 
 belül, ami különösen hasznos mobil eszközök, redundáns hálózatok vagy edge 
 hálózati környezetek esetén.
+
+
+\subsubsection{QUIC multipath alapjaiban}
 
 A multipath koncepció technikai alapja, hogy a QUIC kapcsolat során nemcsak egy, 
 hanem több \textbf{path}
@@ -193,14 +221,14 @@ Egy \emph{path} definíció szerint egy adott forrás-cél IP-cím és port komb
 különböző fizikai vagy logikai hálózati kapcsolatok reprezentálása. A PicoQUIC multipath 
 támogatása lehetővé teszi, hogy egy kapcsolat során több ilyen path aktív legyen, és az 
 alkalmazás (quic-et megvalósító rétegében egy belső algoritmus) meghatározza, 
-hogyan ossza meg az adatforgalmat ezek között.
+hogyan ossza meg az adatforgalmat ezek között \cite{pico_git}.
 
 PicoQUIC esetében a multipath kezelés alapvetően decentralizált és eseményvezérelt. 
 A kapcsolat felépítése során egy adott interfészen elindított kapcsolat kiegészíthető 
-további \textbf{PATH CHALLENGE / RESPONSE} üzeneteken keresztül feltérképezett 
+további \textbf{PATH CHALLENGE / RESPONSE} (útvonal próba / útvonal válasz) üzeneteken keresztül feltérképezett 
 útvonalakkal. Ha egy új path válik elérhetővé (például egy új IP-cím vagy interfész 
 aktiválódik), a rendszer felismeri azt, és lehetőséget biztosít az adatküldés ezen 
-az útvonalon történő elindítására. A path-ok állapotát folyamatosan figyeli a protokoll 
+az útvonalon történő elindítására. A path-ek állapotát folyamatosan figyeli a protokoll 
 (RTT, veszteség, állapotváltozás), így lehetővé válik az útvonalak közötti dinamikus 
 váltás vagy forgalommegosztás a kapcsolatok megszakítása nélkül. Ez különösen 
 fontos real-time alkalmazásokban, mivel lehetővé teszi a megszakítás nélküli streamelést 
@@ -208,12 +236,12 @@ még hálózati hiba vagy mobilitás esetén is.
 
 \subsubsection{A Media over QUIC (MoQ) protokoll}
 
-A Media over QUIC (MoQ) egy új, még fejlesztés alatt álló protokollcsalád, 
+A Media over QUIC (MoQ) (Médiaátvitel QUIC felett) egy új, még fejlesztés alatt álló protokollcsalád \cite{moq_draft}, 
 amely a QUIC nyújtotta lehetőségekre építve biztosít alacsony késleltetésű, 
 valós idejű médiatovábbítást. A MoQ rendszerében a szerepkörök három alapvető 
-típus köré szerveződnek: a \textbf{Publisher} az, aki a médiatartalmat (például 
-videó vagy hangfolyam) létrehozza és továbbításra bocsátja, a \textbf{Subscriber} 
-a végponti fogyasztó, aki ezt a tartalmat fogadja és feldolgozza/lejátsza, míg a \textbf{Relay} 
+típus köré szerveződnek: a \textbf{Publisher} (szolgáltató) az, aki a médiatartalmat (például 
+videó vagy hangfolyam) létrehozza és továbbításra bocsátja, a \textbf{Subscriber} (fogyasztó)
+a végponti fogyasztó, aki ezt a tartalmat fogadja és feldolgozza/lejátsza, míg a \textbf{Relay} (továbbító)
 köztes szereplőként funkcionál, amely a számára elérhető tartalmat hirdeti és 
 továbbítja más résztvevők felé, jellemzően a késleltetés, terheléselosztás 
 és elérhetőség optimalizálása érdekében. 
@@ -232,11 +260,6 @@ Ezáltal a gazdag struktúrabeli opciók lehetőséget biztosítanak a tartalom 
 réteg rugalmasan tudjon alkalmazkodni a változó hálózati viszonyokhoz – például 
 egy útvonal meghibásodásához, vagy új alternatív útvonal megjelenéséhez.
 
-\subsubsection{MoQ és a multipath jelenlegi állapota}
-
-A MoQ protokoll jelenlegi állapota még fejlesztés alatt áll, és jelenleg egyik implementáció
-sem támogatja a multipath képességeket.
-
 \subsubsection{Multipath célja a MoQ-ban}
 
 A multipath működés bevezetése ebbe az architektúrába jelentős előnyt nyújthat, 
@@ -249,61 +272,24 @@ a relay automatikusan kiválaszthatja a legjobb elérhető útvonalat egy adott 
 Ez az architektúra ideális alapot teremt olyan rendszerek számára, ahol fontos a magas 
 rendelkezésre állás, az alacsony késleltetés és az automatikus hibatűrés.
 
+\subsubsection{MoQ és a multipath jelenlegi állapota}
+
+A MoQ protokoll jelenlegi állapota még fejlesztés alatt áll, és jelenleg egyik implementáció
+sem támogatja a multipath képességeket, emiatt is újszerű és érdekes feladat
+a LibQuicR \cite{libquicr}(MoQ fejlesztési irány) könyvtárba a multipath képességek bevezetése.
+
 \subsubsection{Miért a LibQuicR?}
 
 Bár más MoQ fejlesztési irányok is léteznek, azért a LibQuicR könyvtárra esett a
 választás, mert a QUIC protokollt a PicoQUIC könyvtár segítségével implementálja, amely
 jelenleg is folyamatosan bővül, és multpath támogatása is követi a legújabb szabványosítási irányokat.
 
-% Amikor a tágabb tudományos vagy műszaki környezetről beszélünk, akkor
-% azt értjük alatta, hogy ,,művelt laikus'' -- alapesetben ennek
-% tekinthető a tárgyfelelős -- megtalálja azokat a kapcsolódási
-% pontokat, amelyek segítségével az ő ismereteihez a beszámolóban
-% tárgyalt témakör és az elvégzett munka csatlakoztatható.  Ez
-% mindenképpen, szükséges, hiszen enélkül az olvasónak előzetes
-% tájékozódást kellene végeznie a szűkebb szakterületen, hogy az
-% elvégzett munka jellegét, súlyát, nehézségét meg tudja ítélni.
-% 
-% Természetesen a terjedelmi korlátok miatt nem lehet teljes mértékben
-% bemutatni az adott szűkebb szakterületet, ezért meg kell adni az
-% érdeklődő olvasónak a lehetőséget a további tájékozódásra.  Részben
-% erre szolgálnak a hivatkozások\footnote{A másik nagyon fontos céljuk
-%   az állítások alátámasztása.  A lábjegyzetek használatát egyébként
-%   nem érdemes túlzásba vinni, mert állandóan megtörik az olvasás
-%   folyamatát (lásd például \cite{esterhazy}).  Akkor kell használni,
-%   amikor a lábjegyzetben közlendő információ érdekes lehet, de nem
-%   tartozik közvetlenül a tárgyhoz.  Mindenképpen kerülendő az irodalmi
-%   hivatkozások lábjegyzetben való megadása.}, lábjegyzetek.
-% 
-% Nagyon fontos, hogy abban az esetben, amikor a hallgató féléves
-% munkájának egy része vagy egésze az, hogy tanul, hogy maga is
-% ismerkedik azzal a szakterülettel, amelyen dolgozni fog, akkor az
-% tudatosan törekedjen arra, hogy az Elméleti összefoglaló és az
-% Elvégzett munka ismertetése szétválasztható legyen.  Az előbbinek a
-% szakterület alapvető, általános ismereteit kell tartalmaznia,
-% amelyekről a ,,művelt laikusnak'' részleges ismeretei lehetnek.  Míg
-% az elvégzett munka leírásába azoknak a specifikus ismereteknek a
-% bemutatása kerülhet, amelyek a később elvégzett vagy elvégzendő
-% feladatokat konkrétan megalapozzák.
-% 
-% További tanulmányozásra ajánljuk Eco professzor művét~\cite{eco}.
-% 
-% A hivatkozások kezelésénél fontos, hogy mindig a mondat részeként
-% tekintsünk rá, és ha szükséges, akár többször is hivatkozzunk meg egy
-% forrást, de az első előfordulásakor mindenképpen.  Ugyanez érvényes a
-% rövidítésekre: minden rövidítést a legelső előforduláskor magyarázni
-% kell, később viszont használhatók a rövidített formák is.  Például: a
-% Tiger Tree Hash (TTH) a hashelés egy speciális formája.
-
 \subsection{A munka állapota, készültségi foka a félév elején}
 \label{sec:munka-allap-kesz}
 
-Ebben a részben lehet megadni a korábbi félévekben elvégzett munkát
-is.  Így világosan elkülöníthető az aktuális félévtől.  Nem kell
-hosszasan írni, de ne legyen felsorolás sem.  Egy bekezdésben kellene
-itt leírni, hogy foglalkoztál-e már ezzel a témával, a tanszéken
-dolgozott-e már valaki rajta.  Írd le azt is, hogy mit kaptál kézhez
-hozzá segítségként.
+A munka félév kezdeti állapota röviden összefoglalható azzal, 
+hogy saját tapasztalatom nem volt sem a QUIC protokollal, sem a LibQuicR
+kódjával kapcsolatban, valamint a téma is új, tehát nem volt mire építeni.
 
 \newpage
 %==================================================================
@@ -313,6 +299,79 @@ hozzá segítségként.
 
 \subsection{A munkám ismertetése logikus fejezetekre tagoltan}
 \label{sec:a-munkam-ismert}
+
+\subsubsection{Megismerkedás a picoQUIC könyvtárral}
+
+\subparagraph{}
+A féléves munka kezdetén elsődleges célom az volt, hogy alaposan megismerjem a 
+PicoQUIC könyvtárat, mivel ez képezte a későbbi 
+fejlesztések technikai alapját. A PicoQUIC egy könnyűsúlyú, C nyelven írt, kutatási 
+célokra is jól használható implementáció. A megismerés első lépése a hivatalos példaprogramok 
+tanulmányozása és futtatása volt, melyek segítettek megérteni a könyvtár felépítését, 
+működési modelljét, de különösen a multpath kezelés módjait.
+
+Maga a \textbf{példaprogram felépítése} elég egyszerű, olyan értelemben hogy ez egy darab '.c' fájl, amely a picoQUIC függvényeit használja, 
+és a szerver, valamint a kliensek funkcióit is ellátja egyaránt. 
+
+Sajnos pont emiatt az átláthatóságot nem feltétlen egyszerűsíti meg, de összességében 
+a munka során kiderült, hogy két dolog szükséges a multipath működéshez:
+
+\begin{itemize}
+
+  \item a kezdeti multipath negotiation (egyeztetés) - ami arra szolgál, hogy a két fél közötti első
+  kapcsolat felépítésekor megegyezzenek az összes többi transzport paraméter mellett abban is, 
+  hogy mind a két fél támogatja-e a többutas kapcsolatot
+
+  \item illetve az "extra" útvonalak tényleges kiépítése
+
+\end{itemize}
+
+Ezek körül a picoquicdemo-ban az utóbbi könnyen fellelhető, mivel ezen a téren sok fajta opciót biztosít, mint pl.:
+\begin{itemize}
+  \item alapszintű multipath, több interfész használata
+  \item NAT rebinding \footnote{A NAT rebinding (vagy NAT kapcsolat újtársítás) egy olyan jelenség, 
+  amikor a hálózati címfordító (NAT) eszköz új külső IP-cím–port párost rendel a klienshez, 
+  például újracsatlakozás után} (NAT kapcsolat újratársítás) tesztelése
+  \item Connection ID (kapcsolat azonosító) változtatás 
+  \item új címre való migráció tesztelése
+\end{itemize}
+
+Ezek közül jelenlegi munka szempontjából az egyszerű multipath a leginkább releváns,
+mivel amíg az nem működik megfelelően, addig a többi nem is igazán tesztelhető/használható.
+Szerencsére az ezt ellátó kódrészlet a picoquicdemo-ban jól elkülönül, így jó alapot is képzett
+a LibQuicR könyvtárban való implementálásához.
+
+\subsubsection{Működés elemzésének módjai}
+
+Bár a picoQUIC beépítetten rengeteg funkciót és metrikát biztosít a működés elemzésére,
+
+-wireshark
+
+--sslkeylog
+
+\subsubsection{mininet}
+
+altémák:
+
+- maga a mininet
+
+- topológia és miért úgy ahogy
+
+- Tesztelés gyorsítása mininet segítségével
+
+\subsubsection{libquicr felépítése és átalakítása}
+
+\subsubsection{Elvégzett munka eredményei}
+
+
+
+
+Maga a picoQUIC könyvtár a QUIC protokoll implementációja, amely szerencsére
+kifejezetten előrehaladott, és sokféle multipath funkciót támogat, különösen 
+a könyvtár részét képző \textbf{picoquicdemo} nevű demóprogram.
+
+
+
 <Én magam (nem a társam) a félév során következőket olvastam el /
 programoztam / készítettem el / teszteltem / dokumentáltam / néztem át
 / tanultam meg, stb.  Tételes leírása és felsorolása mindannak, ami a
@@ -488,6 +547,21 @@ beszámoló felépítésében nem érdemes eltérni a \emph{Bevezető --
 
 \begin{thebibliography}{9}
 \label{sec:tanulm-irod-jegyz}
+
+\bibitem{live_stats} Douglas Karr, \emph{Live Streaming Trends and Statistics (2024)}, 
+\url{https://martech.zone/live-streaming-trends-statistics/}
+
+\bibitem{quic} Saleh Alawaji, \emph{IETF QUIC v1 Design, 2021. dec. 15.}, 
+\url{https://www.cse.wustl.edu/~jain/cse570-21/ftp/quic/index.html}
+
+\bibitem{mp_quic} QUIC Working Group, \emph{Multipath Extension for QUIC, draft-ietf-quic-multipath-14, 2025. apr. 24.}, \url{https://datatracker.ietf.org/doc/draft-ietf-quic-multipath/14/}
+
+\bibitem{pico_git} Christian Huitema / Private Octopus Inc., \emph{PicoQUIC GitHub repository}, \url{https://github.com/private-octopus/picoquic}
+
+\bibitem{moq_draft} IETF, \emph{Media over QUIC Transport, 2025. apr. 28.}, \url{https://datatracker.ietf.org/doc/draft-ietf-moq-transport/11/}
+
+\bibitem{libquicr} Quicr, \emph{LibQuicR GitHub repository}, \url{https://github.com/Quicr/libquicr}
+
 
 \bibitem{eco} Umberto Eco, \emph{Hogyan írjunk szakdolgozatot?},
   Kairosz Kiadó, 2000, ISBN: 9639137537.
