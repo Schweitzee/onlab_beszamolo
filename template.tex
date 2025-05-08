@@ -213,7 +213,7 @@ adatátvitel \cite{mp_quic}. A multipath képesség lehetővé teszi több párh
 belül, ami különösen hasznos mobil eszközök, redundáns hálózatok vagy edge 
 hálózati környezetek esetén.
 
-A QUIC protokoll és a HTTP/3 működésének vizsgálatára fejlesztették ki hozzá a qlog formátumot, amelynek célja,
+A QUIC protokoll és a HTTP/3 működésének vizsgálatára fejlesztették ki hozzá a qlog \cite{qlog} formátumot, amelynek célja,
 hogy strukturált és gépileg olvasható formátumban rögzítse a QUIC kapcsolatok eseményeit és metrikáit.
 Ez tulajodnképpen egy JSON-t generál a kapcsolat bármely végpontjában ami tartalmaz minden olyan adatot amely a 
 kapcsolat során generálódik a QUIC rétegben, beleértve a csomagok küldését és fogadását,
@@ -331,7 +331,7 @@ Az alábbi topológiát hoztam létre a Mininet segítségével, amellyel a mult
 \begin{figure}[h]
   \centering
     \includegraphics[width=15cm]{topo1}
-\caption{A Mininetben létrehozott topológia}
+\caption{A Mininetben létrehozott topológia \cite{drawio}}
 \end{figure}
  
 Ahogy említettem a h1, h2, h3 jelölik a hostokat, s0-s5 jelölik a switch-eket, és r0 jelöli a routert.
@@ -351,7 +351,7 @@ amely a mininet API-ját használja a virtuális gépek és kapcsolatok létreho
 a hostokon futtatott demonstrációs programokat és a Wireshark csomagelkapást is.
 Tehát egy script futtatásával pillanatok alatt megfigyelhető a kívánt program működése.
 
-\subsubsection{Megismerkedás a picoQUIC könyvtárral}
+\subsubsection{Megismerkedás a PicoQUIC könyvtárral}
 
 \subparagraph{}
 A féléves munka kezdetén első célom az volt, 
@@ -360,7 +360,7 @@ fejlesztések technikai alapját. A megismerés első lépése a \textbf{picoqui
 tanulmányozása és futtatása volt, ami segített megérteni a könyvtár felépítését, 
 működését, de különösen a multpath kezelés módjait.
 
-Maga a pcioquicdemo felépítése elég egyszerű, olyan értelemben hogy ez egy darab C fájl, amely a picoQUIC függvényeit használja, 
+Maga a pcioquicdemo felépítése elég egyszerű, olyan értelemben hogy ez egy darab C fájl, amely a PicoQUIC függvényeit használja, 
 és a szerver, valamint a kliensek funkcióit is ellátja egyaránt. 
 
 Sajnos pont emiatt az átláthatóságot nem feltétlen egyszerűsíti meg, de összességében 
@@ -368,7 +368,7 @@ a munka során kiderült, hogy két dolog szükséges a multipath működéshez:
 
 \begin{itemize}
 
-  \item a kezdeti multipath negotiation (egyeztetés) - ami arra szolgál, hogy a két fél közötti első
+  \item a kezdeti multipath negotiation (egyeztetés) – ami arra szolgál, hogy a két fél közötti első
   kapcsolat felépítésekor megegyezzenek az összes többi transzport paraméter mellett abban is, 
   hogy mind a két fél támogatja-e a többutas kapcsolatot
 
@@ -378,7 +378,7 @@ a munka során kiderült, hogy két dolog szükséges a multipath működéshez:
 
 Ezek körül az utóbbit megvalósító kódrészletek könnyen fellelhetőek, mivel ezen a téren a program sok fajta opciót biztosít, 
 amelyek közül a legegyszerűbb eshetőség az alapszintű multipath, amikor több interfész használatával
-több útvonalat alakítunk ki, amelyeket a picoQUIC könyvtár automatikusan kezel.
+több útvonalat alakítunk ki, amelyeket a PicoQUIC könyvtár automatikusan kezel.
 
 Jelenlegi munka szempontjából ez az egyszerű multipath a leginkább releváns,
 mivel amíg az nem működik megfelelően, addig a komplexebb multipath forgatókönyvek nem is igazán tesztelhetők/használhatók.
@@ -389,16 +389,16 @@ a LibQuicR könyvtárban való implementálásához.
 
 \subparagraph{}
 
-Munkám során elég korán előjött a kérdés, hogy hogyan tudom a picoQUIC működését elemezni, mivel
-a tényleges működést nehéz folyamatában nyomon követni, hasznos lenne picoQUIC kapcsolatot menedzselő adatfolyamot is látni.
+Munkám során elég korán előjött a kérdés, hogy hogyan tudom a PicoQUIC működését elemezni, mivel
+a tényleges működést nehéz folyamatában nyomon követni, hasznos lenne PicoQUIC kapcsolatot menedzselő adatfolyamot is látni.
 
-A picoQUIC rengeteg funkciót és metrikát biztosít a működés elemzésére, 
+A PicoQUIC rengeteg funkciót és metrikát biztosít a működés elemzésére, 
 első sorban a qlog fájlok generálása lenne a leginkább logikus lépés, és
 a protokoll alapszintű működésének megértése szempontjából valóban hasznos 
 a qlog, de nem minden esetben elegendő, mivel a QUIC protokoll
 sokféle eseményt és metrikát generál, amelyek közül sok nem feltétlenül releváns a 
 multipath működés szempontjából és maga a multipath is megnehezíti mivel az egyetlen 
-qlog vizualizáló amit találtam az a qvis \footnote{qvis: webes alkalmazás, amely a qlog 
+qlog vizualizáló amit találtam az a qvis \cite{qvis} \footnote{qvis: webes alkalmazás, amely a qlog 
 fájlok vizualizálására szolgál, és sajnos a multipath használata könnyen eltorzítja a két oldal 
 kapcsolatának a szinkronizációját.} volt, ami sajnos nem tudja könnyen és átláthatóan kezelni a multipath eseményeket, 
 így ezzel nem tudtam megfelelően elemezni a kapcsolatokat.
@@ -413,7 +413,7 @@ addig a Wireshark magukat a hálózati interfészen megjelenő csomagokat rögz�
 miatt, mivel a másodlagos útvonalon küldött és fogadott csomagokat a Wireshark 
 nem tudja hozzákötni automatikusan az első útvonal interfészén létrejött kapcsolat titkosított csomagjaihoz.
 
-A picoQUIC beépítetten támogatja a SSL keylog fájlok generálását a "SSLKEYLOGFILE" környezeti változó 
+A PicoQUIC beépítetten támogatja a SSL keylog fájlok generálását a "SSLKEYLOGFILE" környezeti változó 
 beállításával, ami segítségével fel lehet oldani a quic által használt tls titkosítást,
 így a Wireshark képes dekódolni a csomagokat, és megjeleníteni azok 
 tartalmát (legalábbis a kapcsolat kezeléséért felelős quic réteg szempontjából).
@@ -429,181 +429,215 @@ csomagokat tartalmazó pcapng fájlokat dekódolja, a keylog fájl segítségév
 és elemezhetőek egy Wireshark programban.
 
 
-\subsubsection{libquicr felépítése és átalakítása}
+\subsubsection{LibQuicR felépítése és átalakítása}
 \paragraph{}
 
+A LibQuicR könyvtár természetesen egy nagyobb volumenű kihívás mint a picoquicdemo program 
+megértése, mivel amíg az utóbbi egy darab C fájl, ami direkt használja a PicoQUIC könyvtárat,
+addig a LibQuicR egy sokkal komplexebb struktúrával rendelkezik, amelyben a PicoQUIC könyvtár sokkal kevésébb közvetlenül van jelen.
+Ennek ellenére pont azért, mert egy jelentősen nagyobb struktúráról van szó, szükségszerűen sokkal 
+jobban elkülönülnek a különböző funkciók, így a PicoQUIC API-ját használó kódrészletek is.
 
+Tulajdonképpen 3 funkciót kellett implementálni a LibQuicR könyvtárban,
+amelyek a multipath működéshez kapcsolódnak:
+\begin{enumerate}
+  \item CLI argumentumok kiegészítése multipath specifikus lehetőségekkel
+
+  \item a multipath negotiation (egyeztetés) – ami arra szolgál, hogy a két fél közötti első
+  kapcsolat felépítésekor megegyezzenek az összes többi transzport paraméter mellett abban is, 
+  hogy mind a két fél támogatja-e a többutas kapcsolatot
+
+  \item a másodlagos útvonalak tényleges kiépítése
+
+\end{enumerate}
+
+Nyilvánvalóan ebből a második és harmadik megegyezik a korábban PicoQUIC-nél említettekkel, mivel ezek elengedhetetlenek a multipath működéshez,
+de ahhoz, hogy ezt érdemben lehessen használni is, szükséges volt a CLI argumentumok kiegészítése is.
+Ezt a picoquicdemo-ban használatos argumentumokhoz hasonlóan 
+valósítottam meg, mivel ha már PicoQUIC-re alapozik a LibQuicR, és maga a fejlesztésem pedig annak a 
+multipath demonstrálására szolgáló demó programjára alapozik, akkor a CLI argumentumoknak hasonlósága logikus lépés.
+
+Relay esetén ez a CLI argumentumok kiegészítése csak egy extra argumentumot jelentett:
+\begin{verbatim}
+  -m, --multipath
+\end{verbatim}
+Ez egy szimpla kapcsoló (nem fogad extra paramétert), amely oly módon engedélyezi a multipath támogatást, hogy amikor létrejön a relay objektum QUIC traszportért felelős része,
+akkor azt úgy inicializálja, hogy egy bejövő kapcsolat esetén a transzport paraméterek egyeztetésénél a saját paraméterei között szerepeljen a multipath támogatás is.
+
+Végponti kapcsolat esetén ez két kiegészítést jelentett:
+\begin{itemize}
+  \item 
+  \begin{verbatim}
+    -m, --multipath
+  \end{verbatim}
+
+  \item \begin{verbatim}
+    -a "...", --alt_ifaces "..."
+  \end{verbatim}
+\end{itemize}
+
+Itt természetesen a multipath kapcsoló ugyanúgy működik mint a relay esetén,
+de emellett szükséges volt egy új argumentum is, amely lehetővé teszi a felhasználó számára, hogy megadja a másodlagos interfészeket,
+amelyeken a multipath harmadik szükséges elemét, a másodlagos útvonalakat kiépíti. Ehhez szüksége van paraméterekre, amelyek a másodlagos interfészeket
+tartalmazzák, itt is a picoquicdemo-val azonos formátumot használtam, tehát a következő formátumot várja:
+\begin{verbatim}
+  -a "<ip-cím>/<interfész száma>,<ip-cím>/<interfész száma>,..."}
+\end{verbatim}
+Például a h1 host esetén ez az alábbi módon néz ki: "192.168.1.100/3,192.168.2.100/4". Látható, hogy az alapértelmezett ip címre nincs 
+szüksége, mert azon már elkezdődött a kapcsolat, és csak azokat az interfészeket kell megadni, amelyeken a másodlagos útvonalakat kiépíti. 
+
+A megfelelő ip-cím/interfész párokat az 
+\begin{verbatim}
+  ip addr show
+\end{verbatim}
+paranccsal lehet lekérdezni linuxon, amely megjeleníti a host interfészeinek ip-címét és számát.
+
+Az eltérés a relay és a végponti kapcsolat között abban rejlik, hogy míg a relay fogadja a bejövő kapcsolatokat, addig a végponti kapcsolat esetén önállóan,
+a kapcsolat létrejötte után küldd PATH CHALLENGE üzeneteket a másodlagos interfészeken, 
+hogy azok is elérhetővé váljanak a kapcsolat számára (amennyiben a multipath negotiation sikeresen megtörtént).
+Relay esetén több interfész használatát nem implementálja jelenleg a munkám.
+
+\paragraph{}
+
+A multipath negotiation megvalósulásához ki kellett egészíteni a LibQuicR-ben
+használt adatstruktúrákat, hogy eljussanak a multipath és az interfész információk
+arra a szintre, ahol a PicoQUIC könyvtár API-ját használja a program, valamint 
+a PicoQUIC transzport objektum konstruktorát 
+kellett kiegészíteni, és a transzport paraméterek inicializálásakor a mulitpath paraméter mellett az 
+\begin{verbatim}
+  initial_max_path_id
+\end{verbatim}
+változót kellett beállítani, hogy kapcsolat létrehozása után tudjon kezelni több útvonalat is.
+
+\paragraph{}
+
+A többi útvonal kiépítése gyakorlatilag megegyező módon működik, mint a picoquicdemo esetén. A PicoQUIC 
+\begin{verbatim}
+  packet_loop_v3()
+\end{verbatim}
+függvénye minden egyes csomag feldolgozása után meghív egy callback függvényt, amely a LibQuicR könyvtárban van 
+implementálva, és ebben történik meg – ha minden körülmény adott, tehát kliensről van szó, 
+multipath engedélyezett, és addig a pontig még nem volt új útvonal próbálva – hogy a másodlagos interfészeken PATH CHALLENGE üzeneteket küldjön.
+Ebben a callback függvényben történik egy segédfüggvény segítségével a másodlagos interfészeket tartalmazó sztring feldolgozása is, amely logikailag
+ugyancsak azonos módon működik mint a picoquicdemo esetén.
 
 
 \subsubsection{Elvégzett munka eredményei}
+\paragraph{}
 
+Módosításaim eredményeként a bemutatott környezetben működik a multipath
+kapcsolat, amely a másodlagos interfészeken keresztül adatokat küldeni és fogadni, továbbá valamely útvonal megszakadása esetén
+minimális késleltetéssel képes a másodlagos interfészen folytani az adatátvitelt.
+Maga az adatátvitel időbélyegek másdopercenkénti küldését jelenti, ami egy beépített módja a LibQuicR demó programjának.
 
-<Én magam (nem a társam) a félév során következőket olvastam el /
-programoztam / készítettem el / teszteltem / dokumentáltam / néztem át
-/ tanultam meg, stb.  Tételes leírása és felsorolása mindannak, ami a
-félév során történt, alátámasztandó azon állításom a
-konzulens/tárgyfelelős felé, hogy összességében mindent beleértve
-tényleg dolgoztam a TVSZ szerint kreditenként 30 órát, azaz a heti 2
-kontakt órás tárgy esetében min. $2,5*30 = 75$ munkaórát, illetve a
-heti 6 kontakt órás tárgy esetében min. $8*30 = 240$ munkaórát\dots>
-
-Ebben a részben a hallgató az általa elvégzett munkát mutatja
-be. Hangsúlyosan a saját munka bemutatása a cél, hiszen a hallgató
-ezzel igazolja a témavezető és a tárgyfelelős irányába, hogy --
-folyamatosan fejlődve és egyre több és jobb munkát végezve -- a
-szakdolgozatát/diplomadolgozatát képes lesz megírni.  A beszámoló nem
-munkanapló, nem arra vagyunk kíváncsiak, hogy mit mikor csinált a
-hallgató és mennyi időt töltött vele, hanem egy eredmény-centrikus
-beszámolót szeretnénk olvasni.  De itt is fontos tudni, hogy
-megosztott feladat esetén ki-mit csinált, mekkora részt vállalt.
-
-Az egész beszámoló elkészítésénél törekedni kell a magyar nyelv
-szabályainak követésére és a műszaki dokumentáció/tudományos közlemény
-írásával kapcsolatosan kialakult közmegegyezés szerinti formai
-követelmények betartására.  (Tehát nem kell többes számként hivatkozni
-saját magunkra, kerülni kell a furcsa megfogalmazást, passzív és egyéb
-kifacsart mondatszerkezeteket.  Az egy szót határozatlan névelőként
-történő használatakor ne írjuk ki számként.)
-
-
-A beszámoló természetesen nem csak szöveget tartalmazhat, hanem
-képleteket, táblázatokat, ábrákat és még sok minden mást.  Ezek
-kapcsán az alábbi elvek irányadók:
-\begin{itemize}
-\item Az ábráknak, képeknek és táblázatoknak mindig van számuk és
-  címük. (A cím nem ennyi: ,,1. ábra'', hanem azt írd le, ami látható
-  rajta.)
-
-\item Az ábrákra, a képekre és a táblázatokra a szövegben hivatkozni
-  kell, és a szövegben elemezni kell azokat. Például
-  \aref{fig:fig1}.~ábrán látszik, hogy a vizsgált félévben még két
-  napos csúszással is lehetett jeles érdemjegyet szerezni a tárgyból,
-  de a pontosság még nem garancia a jó jegyre: öten nem kaptak jelest,
-  noha nem késtek a leadással.
-
-\item Az ábrák, képek és táblázatok mérete a szükségesnek megfelelő
-  legyen: elég nagy ahhoz, hogy kinyomtatva is olvasható és
-  értelmezhető legyen, de nem nagyobb annál, mint amit szerepe
-  indokol.
-
-\item A grafikonoknak a tengelyeken legyenek feliratai és ha releváns,
-  a mértékegység is.
-
-\item A képletek esetében nem minden képletre történik hivatkozás, de
-  ahol igen, ott a képletet a műszaki irodalomban jellemző módon a sor
-  végére tett kerek zárójelben lévő számmal jelöljük meg.  A
-  képleteket ne képként illeszd be a szövegbe.
-
-\item Kódrészleteket, ha nem relevánsak, ne illeszd be képként, főleg
-  ne rossz minőségben. Nyugodtan teheted függelékbe és hivatkozd be a
-  szövegben, mint a képeket, például: Az 1.~számú függelékben
-  található az adatbeolvasó kód, melyet C++ nyelven készítettem el.
-\end{itemize}
-
-Az írásbeli beszámolót a témavezető és a tárgyfelelős is értékeli. A
-tárgyfelelősi értékelés szempontjai az alábbiak:
-\begin{enumerate}
-\item Megfelel-e az elvégzett munka a félév elején kiadott feladatnak?
-\item Megfele-e a beszámoló a formai követelményeknek? Ezen belül:
-  \begin{itemize}
-  \item a. Megfelelő-e az elméleti bevezető és az irodalomjegyzék?
-  \item b. Egyértelmű-e, hogy mi volt a hallgató saját munkája?
-  \item c. Megfelelő-e a dokumentum technikai színvonala?
-  \end{itemize}
-
-\end{enumerate}
-Ezen kívül a tárgyfelelős veszi figyelembe az értékelés során
-kialakult félévi jegyre vonatkoztatva az ún. ,,hanyagsági faktor''
-értékét, amelyet (\ref{eq:1}) szerint állapítunk meg:
-
-\begin{equation}
-    F_{hany} = 1 - a - b
-  \label{eq:1}
-\end{equation}
-
-
-\begin{figure}[tbh]
+\begin{figure}[h]
   \centering
-  %\includegraphics[]{}
-  \caption{Hallgatók érdemjegyeinek eloszlása az írásbeli beszámoló késése függvényében}
-  \label{fig:fig1}
+    \includegraphics[width=14cm]{bmon1}
+\caption{Interfész aktivitás 3 aktív útvonallal}
 \end{figure}
 
-Az (\ref{eq:1})-ben szereplő a szám a munkaterv beadásában történt
-késedelemre, míg a b szám az írásbeli beszámoló beadásában történt
-késedelemre vonatkozik.  Utóbbi értékeiről
-\aref{tab:hanyagsagi}.~táblázat tájékoztat.
+2. ábra képén látható, hogy 3 aktív interfészen keresztül van folyamatos adatátvitel, majd a 3. ábrán 
+már látható, hogy a nullás indexű interfészen nem folyik adat, mivel itt az ahhoz kapcsolódó switch és a router közötti kapcsolatot megszakítottam.
+Ezért a másodlagos interfészeken keresztül folytatódik az adatátvitel. Ezek nem csak azt bizonyítják, hogy a multipath 
+implementáció kezeli a kapcsolatszakadást, de azt is, hogy akár 3 interfészt is tud hasznosítani.
 
-\begin{table}
+
+\begin{figure}[h]
   \centering
-    \begin{tabular}{|l|c|}
-      \hline
-      Az írásbeli beszámoló beadásának napja     & A ,,b'' faktor értéke \\
-      a szóbeli beszámolóhoz képest (munkanapban) & ~ \\ \hline          
-      -4.~munkanap & $0.04$ \\ \hline 
-      -3.~munkanap & $0.09$ \\ \hline 
-      -2.~munkanap & $0.20$ \\ \hline 
-      -1.~munkanap & $0.30$ \\ \hline
-      \end{tabular}
-    \caption{Az írásbeli beszámoló késedelmes beadásával kapcsolatos hanyagsági faktor értéke}
-  \label{tab:hanyagsagi}
-\end{table}
+    \includegraphics[width=14cm]{bmon2}
+\caption{Interfész aktivitás 2 aktív útvonallal}
+\end{figure}
 
-A beszámoló értékeléséről részletesebben írunk \cite{web}-ban.
+Majd pedig a 4. ábra képén látható, hogy az egyes indexű interfészen is leállt az adatátvitel (ugyancsak 
+kapcsolatszakadás miatt), de a kettes indexű interfész még mindig képes folytani a kapcsolatot.
 
-A beszámolóban bizonyára szerepelni fognak rövidítések. Ezeket a
-rövidítéseket, betűszavakat néhány, az infokommunikáció területén
-nagyon ismert és gyakran használt kifejezéstől (például IP, TCP, GPRS,
-UMTS) eltekintve ki kell fejteni logikusan az első használat
-alkalmával (például így: ,,A GPS (Generalized Processor Sharing) egy
-ideális folyadékmodellen alapuló csomagütemező eljárás.'').
+\begin{figure}[h]
+  \centering
+    \includegraphics[width=14cm]{bmon3}
+\caption{Interfész aktivitás 1 aktív útvonallal}
+\end{figure}
 
-A beszámoló készítése során előfordulhat, hogy a hallgató úgy érzi,
-hogy alfejezetekkel tagolva jobban olvasható és érthető lenne a
-beszámoló.  Ennek akadálya nincs, de érdemes arra figyelni, hogy a
-túlzott tagolás sem tesz jót egy írásműnek, illetve hogy a címsorokban
-a rövidítések és a hivatkozások használata tilos.  Tartalomjegyzéket
-készíteni nem szükséges a beszámolóhoz, de nem is tilos, kivéve azt az
-esete, amikor nyilvánvalóan terjedelemnövelési célokat szolgál.
+\pagebreak
+Fontos megjegyezni, hogy a relay minimális kódváltoztatással képes minden alábbi szituációban működni:
+\begin{itemize}
+  \item subscriber és publisher is 1-1 intefészen kapcsolódik
+  \item csak subscriber vagy csak publisher kapcsolódik egynél több interfészen
+  \item mind a subscirber és a publisher is több interfészen kapcsolódik
+\end{itemize}
 
-A beszámoló terjedelme tárgyanként változhat.  Általános szabály, hogy
-1 hüvelyknél nagyobb margókat ne használjunk.  A szöveg legyen
-egyszeres sortávú, sorkizárt és 12 pontos betűméretű.  A bekezdések
-kezdődjenek behúzással a minta szerint.
+Illetve érdekes azt is megjegyezni, hogy a korábban említett 
+\begin{verbatim}
+  initial_max_path_id
+\end{verbatim}
+változó a kódban 2-re van állítva, ha multipath környezetben indul el a program,
+de ez nem korlátozza le kapcsolatonként két interfész használatára sem a relayt, sem pedig a 
+subscribert vagy a publishert, mint látható a 2. ábrán, ahol 3 interfész van aktívan használva.
 
 \subsection{Összefoglalás}
 \label{sec:osszefoglalas}
 
-A félévi munka során elért új eredmények ismételt, vázlatos, tömör
-Ebben a részben az adott félévre vonatkozó, az \emph{Önálló
-  laboratórium tárgy keretében elvégzett munka során} elért
-\textbf{új} eredmények ismételt, vázlatos, \textbf{tömör}
-összefoglalását várjuk, lehetőleg nem felsorolásként.  Itt még egyszer
-ki lehet térni a leglényegesebb eredményekre, valamint a félév során
-felmerülő nehézségekre, de meg lehet említeni a továbbfejlesztési
-irányokat, lehetőségeket is.
+\subsubsection{Féléves feladat összefoglalása}
+\paragraph{}
+A félév során a Quic feletti médiaátvitelt megvalósító LibQuicR könyvtárban implementáltam 
+egy kezdetleges multipath funckionalitást, amely lehetővé teszi a relay és a végponti 
+kapcsolatok számára, hogy több interfészen keresztül kommunikáljanak egymással, valamint ezt demonstráltam egy Mininet alapú 
+virtuális környezetben.
 
-Ezt a részt tagolható a következő pontok megválaszolásával:
+
+\subsubsection{Feladat érdekessége}
+\paragraph{}
+
+Ez az első ilyen implementáció MoQ architektúrában, és bár kezdetleges multipath funckionalitást szolgáltat,
+de látható belőle, hogy rengeteg lehetséges irány van a továbbfejlesztésére, amelyek mindegyikéhez jó alapot 
+képez a félév során elvégzett munka. Lehetséges folytatásai a projektnek:
 \begin{itemize}
-\item Mi volt az \textbf{aktuális kérdés}, probléma, amivel a félév
-  során foglalkoztál?
-\item Mi a dolgozat \textbf{célja}, miért érdekes egyáltalán ezzel a
-  problémával foglalkozni?
-\item Milyen \textbf{módszereket} használtál a probléma megoldása
-  érdekében?
-\item Mik a legfontosabb \textbf{eredmények}?
-\item Milyen \textbf{következtetéseket} lehet levonni?
-
+  \item relay és végpont esetén a másodlagos interfészek használata
+  \item picquicdemo programban megtalálható egyéb multipath lehetőségek implementálása
+  \begin{itemize}
+    \item kapcsolati azonosítók megújítása
+    \item NAT rebinding \footnote{A NAT rebinding (vagy NAT kapcsolat újtársítás) egy olyan jelenség, 
+    amikor a hálózati címfordító (NAT) eszköz új külső IP-cím–port párost rendel a klienshez, 
+    például újracsatlakozás után} (NAT kapcsolat újratársítás) lehetősége
+    \item azonos címről, de másik porttal új útvonal létrehozása
+    \item kapcsolat teljes migrációja a másodlagos interfészek egyikére
+  \end{itemize} 
+  \item relay és relay közötti kapcsolatban multipath használata
+  \item olyan demó program készítése amely valós médiaátvitelt végez multipath használatával (videó streamelés)
 \end{itemize}
 
-Ha valaki elolvassa ezt a részt, képet kell kapnia az egész
-dolgozatról.  Ne legyen az absztrakt szó szerinti ismétlése.
+\subsubsection{A munka során használt eszközök}
+\paragraph{}
+A Wireshark és a Mininet programok sok segítséget nyújtottak a munka során, mind a protokollok 
+megismerésében és megértésében, mind pedig a munka és azon belül is a tesztelés automatizálásában, de ezeken 
+felül haladva a világgal, próbáltam nagy nyelvi modelleket is hasznosítani a munka során, mint például a ChatGPT, vagy a GitHub Copilot,
+amelyek sok esetben segítettek a kód megértésében, de ugyanakkor sok esetben megmutatták, hogy mik a határaik, mivel 
+ezek az eszközök se tudják teljes egészében átlátni a projekt struktúráját, emiatt gyakran csak tág keretek között tudtak tippeket adni, de konkrét
+irányokat nem tudtak mutatni. Így természetesen a legtöbbször manuálisan kellett felfedeznem a kapcsolódási pontokat a LibQuicR és a picoQUIC között,
+aminek eredményeként sokkal jobb rálátást kaptam a két könyvtár közötti kapcsolatra.
 
-Fontos, hogy az itt megadott sablontól el lehet térni, használata nem
-kötelező, csak segítséget jelenthet, viszont a fedőlap lehetőleg
-maradjon ugyanez és tartalmilag egyezzen meg a sablon irányelveivel. A
-beszámoló felépítésében nem érdemes eltérni a \emph{Bevezető --
-  Féléves munka és eredmények bemutatása -- Összefoglaló} hármastól.
+\subsubsection{Legfontosabb eredményei a munkának}
+\paragraph{}
+
+Két lényeges eredménye van a munkának:
+\begin{itemize}
+  \item A LibQuicR könyvtárban a multipath működésének kezdetleges implementálása
+  \item SSL keylog fájl generálását beépítettem a LibQuicR könytár általam módosított verziójába
+\end{itemize}
+Ezeket a félév végén egy GitHub pull request keretében szeretném megosztani a LibQuicR könyvtár fejlesztőivel,
+hogy a könyvtár további fejlesztése során egyrészt létrejöjjön egy multipath fejlesztési irány is a projektben, másrészt hogy
+a picoQUIC könyvtárral való együttműködést is megkönnyítse a LibQuicR könyvtár fejlesztői számára.
+
+\subsubsection{Egyéb következtetések amelyekre a munka során jutottam}
+
+A Wireshark használata során érdekes kérdés merült fel a multipath PicoQUIC implementálásával kapcsolatban,
+mégpedig, hogy a kapcsolat útvonalait nem feltétlen kezeli az IETF Multipath draftja szerint, mivel adott útvonal kapcsán útvonal szakadás 
+esetén nem láttunk PATH ABANDON üzenetet, ami arra szolgálna, hogy egy már nem működő útvonalat inaktívvá nyilvánítson mind a két fél számára.
+Azonban olyan érdekes jelenség is előfordult, hogy A és B útvonal esetében A útvonal megszakítása után B útvonalon ment tovább az adatátvitel,
+de ha A útvonal újra aktívvá vált, akkor nem használta újra azt, és ezután B útvonal megszakítása után sem váltott vissza A útvonalra. Viszont mi ezt még inkább
+érdekessé teszi, hogy B útvonalat újra aktiválva az adatátvitel folytatódott. Tehát a PicoQUIC multipath implementációja nem feltétlenül
+kezel minden esetet a draft szerint, de ez nem feltétlenül probléma jelenleg, mivel még ez is fejlesztés alatt áll, illetve ez is kijelöl egy lehetséges 
+irányt a projekt folytatására.
+
 
 \newpage
  
@@ -617,8 +651,10 @@ beszámoló felépítésében nem érdemes eltérni a \emph{Bevezető --
 \bibitem{live_stats} Douglas Karr, \emph{Live Streaming Trends and Statistics (2024)}, 
 \url{https://martech.zone/live-streaming-trends-statistics/}
 
-\bibitem{quic} Saleh Alawaji, \emph{IETF QUIC v1 Design, 2021. dec. 15.}, 
-\url{https://www.cse.wustl.edu/~jain/cse570-21/ftp/quic/index.html}
+\bibitem{quic} J. Iyengar and M. Thomson.
+\newblock QUIC: A UDP-Based Multiplexed and Secure Transport.
+\newblock RFC 9000, IETF, May 2021.\\
+\url{https://www.rfc-editor.org/rfc/rfc9000}
 
 \bibitem{mp_quic} QUIC Working Group, \emph{Multipath Extension for QUIC, draft-ietf-quic-multipath-14, 2025. apr. 24.}, \url{https://datatracker.ietf.org/doc/draft-ietf-quic-multipath/14/}
 
@@ -632,76 +668,27 @@ Bob Lantz, Brandon Heller, and Nick McKeown.
 \newblock In \emph{Proceedings of the 9th ACM SIGCOMM Workshop on Hot Topics in Networks (Hotnets-IX)}, pages 19--24, Monterey, California, 2010.
 \newblock Association for Computing Machinery. \url{https://doi.org/10.1145/1868447.1868466}.
 
+\bibitem{drawio} Draw.io segítségével készült ábra, \url{https://app.diagrams.net/}
 
 \bibitem{libquicr} Quicr, \emph{LibQuicR GitHub repository}, \url{https://github.com/Quicr/libquicr}
 
+\bibitem{qlog}Robin Marx.
+\newblock qlog: A standardized schema for logging and visualizing QUIC events.\\
+\url{https://github.com/quiclog/qlog}
 
-\bibitem{eco} Umberto Eco, \emph{Hogyan írjunk szakdolgozatot?},
-  Kairosz Kiadó, 2000, ISBN: 9639137537.
-
-\bibitem{esterhazy} Esterházy Péter, \emph{Termelési-regény (Kisssregény),}
-  Magvető Könyvkiadó, 2004, ISBN: 9631423948.
-
-\bibitem{web} \emph{Tájékoztató a Műszaki Informatika Szak önálló
-    laboratórium tantárgyainak 2008/9. tanév I. félévi lezárásáról a
-    BME TMIT-en (VITMA367, VITMA380, VITT4353, VITT4330),}
-  \url{http://inflab.tmit.bme.hu/08o/lezar.shtml}, szerk.: Németh Felicián,
-  2008. november 5.
-
-\bibitem{wikipedia} Wikipedia contributors, \emph{Wikipedia:Academic
-    use}, Wikipedia, The Free Encyclopedia, 2011 Nov 11.  Available
-  from: \\ \url{http://en.wikipedia.org/w/index.php?title=Wikipedia:Academic\_use\&oldid=460041928}
+\bibitem{qvis}Robin Marx.
+\newblock qvis: A web-based tool for visualizing qlog files.\\
+\url{https://qvis.quictools.info}
 
 \end{thebibliography}
-
-Itt jegyezném meg, hogy a tanulmányozott irodalmat hivatkozni kell a
-szövegben.  Szükség esetén többször is.  Az irodalomjegyzék célja
-(lásd \aref{sec:tanulm-irod-jegyz} fejezetet) ugyanis
-kettős\footnote{Akárcsak ennek a fejezet hivatkozásnak, ami a
-  \texttt{$\backslash$aref babel} parancsot demonstrálja}:
-\begin{enumerate}
-\item Az olvasó tájékoztatása, hogy a dokumentumban ki nem fejtett
-  dolgoknak, a tudottnak vélt ismereteknek hol lehet bővebben
-  utánanézni, így ott kell meghivatkozni az irodalmat~\cite{eco,
-    esterhazy}, ahová az irodalom kapcsolódik.
-\item Megmutatni a tárgyfelelosnek/konzulesnek az elolvasott irodalom
-  mennyiségét
-\end{enumerate}
-
-Javasoljuk, hogy a hallgatók tanulmányozzák, hogyan néznek ki a
-hivatkozások a villamosmérnöki/informatikai szakma vezető szakmai
-folyóirataiban megjelenő cikkekben.  Ebben a témavezető is biztosan
-tud segíteni.  A hivatkozás teljességére és egyértelműségére tessék
-ügyelni.  Például, ha egy könyvnek több, eltérő kiadása is van, akkor
-azt is meg kell jelölni, hogy melyik kiadásra hivatkozunk.  A webes
-hivatkozások problémásak szoktak lenni, de manapság egyre több az
-olyan dokumentum, ami csak weben lelhető fel, ezért használatuk nem
-zárható ki. Itt is törekedni kell azonban a pontosságra és a
-visszakereshetőségre. A weben található dokumentumoknak is van címe,
-szerzője, illetve érdemes megadni a letöltés/olvasás időpontját is,
-hiszen ezek a dokumentumok idővel megváltozhatnak.
-
-A wikipédiás hivatkozások használata nem javasolt, mert a wikipedia
-másodlagos forrás.  Tájékozodjuk a wikipédián, de aztán olvassuk el az
-adott oldalhoz megadott hivatkozásokat is.  A wikipedián külön szócikk
-foglalkozik azzal, hogy miért nem szerencsés tudományos munkákban a
-wikipédiára hivatkozni \cite{wikipedia}.
-
-Nem publikus dokumentumok hivatkozása nem javasolt és csak kivételes
-helyzetben elfogadható!
 
 %==================================================================
 \subsection{A csatlakozó dokumentumok jegyzéke}
 \label{sec:csat-irod}
 
-https://graphonline.top/
+Saját multipath implementációm GitHub repository-ja: \url{https://github.com/Schweitzee/libquicr/tree/multipath}
 
-<A munka ezen beszámolóba be nem fért eredményeinek (például a forrás
-fájlok, mindenképpen csatolni akart forráskód részlet, felhasználói
-leírások, programozói leírások (API), stb.) megnevezése,
-fellelhetőségi helyének pontos definíciója, mely alapján a az
-erőforrás előkereshető -- értelemszerűen nem nyilvános dokumentumok
-hivatkozása nem elfogadható.>
+SSL keylog fájl generálásához szükséges módosítások: \url{https://github.com/Schweitzee/libquicr/tree/ssl-keylog}
 
 \end{document} 
 
