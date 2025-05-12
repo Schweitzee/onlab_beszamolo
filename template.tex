@@ -163,7 +163,7 @@
 \label{sec:bevezeto}
 %--------------------------------------------------------------------
 Napjainkban az internetes adatforgalom túlnyomó részét különféle médiatartalmak – 
-elsősorban videók és élő közvetítések – teszik ki. Egyes kutatások szerint 
+elsősorban videók és élő közvetítések – teszik ki. Egyes kutatások 
 szerint az internetes forgalom 65\%-a ilyen típusú tartalom lehet \cite{live_stats}. 
 Ezek hatékony és megbízható továbbítása azonban komoly 
 technológiai kihívást jelent, különösen akkor, ha a felhasználói élményt is 
@@ -338,10 +338,10 @@ h1 három interfésszel rendelkezik, egyenként csatlakozik a s0, s1 és s2 swit
 Hasonlóan h2 is, csak egy interfésszel, a h3 pedig kettővel csatlakozik.
 
 A hostok és a router között azért van szükség switch-ekre,
-mert a kapcsolatok emuláció közbeni megszakítása problémát okoz, ha a megváltoztatott kapcsolat közvetlenül a host-okhoz csatlakozik, 
+mert a kapcsolatok megszakítása emuláció közben problémát okoz, ha a megváltoztatott kapcsolat közvetlenül a host-okhoz csatlakozik, 
 mivel az alapértelmezett átjárók alhálózatonként eltérnek, így ha egy közvetlen linket megszakítunk (amely külön alhálózaton van a többi interfészhez képest), 
 akkor az alapértelmezett átjáró információja is elveszik, és a link újraépítése után nem tartozik hozzá alapértelmezett átjáró, tehát nem tesztelhető 
-az az eset, amikor a link megszakítása után azt újraépítjük.
+az az eset, amikor a link megszakítása után azt visszaállítjuk.
 Így az alábbi topológián egy switch és a router közötti kapcsolat megszakításával könnyen lehet emulálni a kapcsolat 
 megszakadását az alapértelmezett átjáró eltűnési problémája nélkül.
 
@@ -385,8 +385,7 @@ multipath, amikor több interfész használatával több útvonalat alakítunk k
 
 Jelenlegi munka szempontjából ez az egyszerű multipath a leginkább releváns,
 mivel amíg az nem működik megfelelően, addig a komplexebb multipath forgatókönyvek nem is igazán tesztelhetők/használhatók.
-Az ezt ellátó kódrészlet a picoquicdemo-ban jól elkülönül, így jó alapot is képzett
-a LibQuicR könyvtárban való implementálásához.
+Az ezt ellátó kódrészlet a picoquicdemo-ban jól elkülönül, így jó alapot biztosított a LibQuicR könyvtárbeli implementációhoz.
 
 \subsubsection{Működés elemzésének módjai}
 
@@ -485,7 +484,7 @@ A multipath negotiation megvalósulásához ki kellett egészíteni a LibQuicR-b
 használt adatstruktúrákat, hogy eljussanak a multipath és az interfész információk
 arra a szintre, ahol a PicoQUIC könyvtár API-ját használja a program, valamint 
 a PicoQUIC transzport objektum konstruktorát 
-kellett kiegészíteni, és a transzport paraméterek inicializálásakor a mulitpath paraméter mellett az 
+kellett kiegészíteni, és a transzport paraméterek inicializálásakor a multipath paraméter mellett az 
   \texttt{initial\_max\_path\_id}
 változót kellett beállítani, hogy kapcsolat létrehozása után tudjon kezelni több útvonalat is.
 
@@ -509,7 +508,7 @@ minimális késleltetéssel képes a másodlagos interfészen folytatni az adat�
 Maga az adatátvitel időbélyegek másodpercenkénti küldését jelenti, ami egy beépített módja a LibQuicR demó programjának.
 
 A következő ábrák a bmon program kimenetét mutatják a h1 hoston, amely subscriber üzemmódban fut és három interfészen, interfészenként
-külön alhálózaton kommunkál a h2 hosttal egy rotueren keresztül, amely relay-ként üzemel.
+külön alhálózaton kommunikál a h2 hosttal egy rotueren keresztül, amely relay-ként üzemel.
 
 \begin{figure}[h]
   \centering
@@ -532,7 +531,7 @@ implementáció kezeli a kapcsolatszakadást, de azt is, hogy akár 3 interfész
 \end{figure}
 
 Majd pedig a 4. ábrán látható, hogy az egyes indexű interfészen is leállt az adatátvitel (ugyancsak 
-kapcsolatszakadás miatt), de a kettes indexű interfész még mindig képes folytatni a kapcsolatot.
+kapcsolatszakadás miatt), de a kettes indexű interfészen továbbra is fennmarad az adatátvitelt.
 
 \begin{figure}[h]
   \centering
@@ -557,13 +556,13 @@ subscribert vagy a publishert, mint látható a 2. ábrán, ahol 3 interfész va
 \subsubsection{Egyéb következtetések a PicoQUIC kapcsán}
 
 A Wireshark használata során érdekes kérdés merült fel a multipath PicoQUIC implementálásával kapcsolatban,
-mégpedig, hogy a kapcsolat útvonalait nem feltétlenül kezeli az IETF QUIC Multipath draftja szerint, mivel adott útvonal kapcsán útvonal szakadás 
+mégpedig, hogy nem feltétlenül kezeli a kapcsolat útvonalait az IETF QUIC Multipath draftja szerint, mivel adott útvonal kapcsán útvonal szakadás 
 esetén nem láttunk PATH ABANDON üzenetet, ami arra szolgálna, hogy egy már nem működő útvonalat inaktívvá nyilvánítson mind a két fél számára.
 Azonban olyan érdekes jelenség is előfordult, hogy A és B útvonal esetében A útvonal megszakítása után B útvonalon ment tovább az adatátvitel,
-de ha A útvonal újra aktívvá vált, akkor nem használta újra azt, és ezután B útvonal megszakítása után sem váltott vissza A útvonalra. Viszont mi ezt még inkább
-érdekessé teszi, hogy B útvonalat újra aktiválva az adatátvitel folytatódott. Tehát a PicoQUIC multipath implementációja nem feltétlenül
-kezel minden esetet a draft szerint, de ez nem feltétlenül probléma jelenleg, mivel még ez is fejlesztés alatt áll, illetve ez is kijelöl egy lehetséges 
-irányt a projekt folytatására.
+de ha A útvonal újra aktívvá vált, akkor nem használta újra azt, és ezután B útvonal megszakítása után sem váltott vissza A útvonalra. Ami ezt még inkább érdekessé 
+teszi, az az, hogy B útvonalat újra aktiválva az adatátvitel folytatódott. Tehát a PicoQUIC multipath implementációja nem feltétlenül
+kezel minden esetet a draft szerint, de ez nem feltétlenül jelent problémát a jelenlegi fejlesztési szakaszban, 
+mivel a protokoll még nem végleges, és ez a viselkedés egyben kijelölhet egy lehetséges irányt a projekt további bővítésére vagy finomhangolására.
 
 \subsection{Összefoglalás}
 \label{sec:osszefoglalas}
