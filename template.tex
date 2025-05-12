@@ -125,18 +125,18 @@
 
   %\feladatmaga argumentuma a feladat 1-2 bekezdésnyi ismertetése
   \feladatmaga{
-    A Media over QUIC (MoQ) egy új, még fejlesztés alatt álló protokollcsalád, 
-    amelyet az IETF szabványosít. Egyik megvalósítása a LibQuicR, amely a feladat alapjául szolgál.
+    A Media over QUIC (MoQ)\cite{moq_draft} egy új, még fejlesztés alatt álló protokollcsalád, 
+    amelyet az IETF szabványosít. Egyik megvalósítása a LibQuicR \cite{libquicr}, amely a feladat alapjául szolgál.
   A feladat maga pedig nem más, mint a LibQuicR könyvtár módosítása 
   oly módon, hogy az képes legyen kihasználni a 
   multipath (többutas) adatátviteli képességeket, amelyeket a PicoQUIC nevű, 
-  QUIC protokollt megvalósító könyvtár biztosít. A munka során
+  QUIC protokollt\cite{quic} megvalósító könyvtár biztosít. A munka során
   során a LibQuicR transzport rétegét úgy kell átalakítani, 
   hogy az egy kapcsolaton belül több hálózati útvonal létesítésére 
   és használatára legyen alkalmas a PicoQUIC multipath implementációján keresztül.
 
-  A módosításokat követően a rendszer működését egy demonstrációval 
-  igazoljuk: egy virtuális tesztkörnyezetben szimulált, több hálózati 
+  A módosításokat követően a rendszer működését egy demonstráció
+  igazolja: egy virtuális tesztkörnyezetben szimulált, több hálózati 
   interfésszel rendelkező kliensek segítségével történik az adatátvitel, 
   amely során aktívan használjuk a multipath képességeket. A demonstráció 
   során egy olyan forgatókönyvet vizsgálunk, ahol az egyik aktív 
@@ -215,8 +215,8 @@ hálózati környezetek esetén.
 
 A QUIC protokoll és a HTTP/3 működésének vizsgálatára fejlesztették ki hozzá a qlog \cite{qlog} formátumot, amelynek célja,
 hogy strukturált és gépileg olvasható formátumban rögzítse a QUIC kapcsolatok eseményeit és metrikáit.
-Ez tulajodnképpen egy JSON-t generál a kapcsolat bármely végpontjában ami tartalmaz minden olyan adatot amely a 
-kapcsolat során generálódik a QUIC rétegben, beleértve a csomagok küldését és fogadását,
+Ez tulajodnképpen egy JSON-t generál a kapcsolat bármely végpontjában ami tartalmaz minden olyan adatot, amely a 
+kapcsolat során generálódik a QUIC rétegben beleértve a csomagok küldését és fogadását,
 a kapcsolat állapotát, a késleltetéseket és a hibákat is.
 
 
@@ -227,17 +227,17 @@ hanem több \textbf{path}
 hozható létre, amelyeket a transzport réteg párhuzamosan vagy dinamikusan képes használni. 
 Egy \emph{path} definíció szerint egy adott forrás-cél IP-cím és port kombináció, azaz 
 különböző fizikai vagy logikai hálózati kapcsolatok reprezentálása. 
-A projektben használt PicoQUIC könyvtár egy QUIC megvalósítás, amelynek fejlődő multipath 
-támogatása lehetővé teszi, hogy egy kapcsolat során több ilyen path aktív legyen, és az 
+A projektben használt PicoQUIC könyvtár egy QUIC megvalósítás, amelynek fejlesztés alatt álló multipath 
+támogatása lehetővé teszi, hogy egy kapcsolat során több ilyen útvonal aktív legyen, és az 
 alkalmazás (quic-et megvalósító rétegében egy belső algoritmus) meghatározza, 
 hogyan ossza meg az adatforgalmat ezek között \cite{pico_git}.
 \paragraph{}
 PicoQUIC esetében a multipath kezelés alapvetően decentralizált és eseményvezérelt. 
 A kapcsolat felépítése során egy adott interfészen elindított kapcsolat kiegészíthető 
 további \textbf{PATH CHALLENGE / RESPONSE} (útvonal próba / útvonal válasz) üzeneteken keresztül feltérképezett 
-útvonalakkal. Ha egy új path válik elérhetővé (például egy új IP-cím vagy interfész 
+útvonalakkal. Ha egy új útvonal válik elérhetővé (például egy új IP-cím vagy interfész 
 aktiválódik), a rendszer felismeri azt, és lehetőséget biztosít az adatküldés ezen 
-az útvonalon történő elindítására. A path-ek állapotát folyamatosan figyeli a protokoll 
+az útvonalon történő elindítására. Az útvonalak állapotát folyamatosan figyeli a protokoll 
 (RTT, veszteség, állapotváltozás), így lehetővé válik az útvonalak közötti dinamikus 
 váltás vagy forgalommegosztás a kapcsolatok megszakítása nélkül. Ez különösen 
 fontos valós-idejű alkalmazásokban, mivel lehetővé teszi a megszakítás nélküli adattovábbitást, 
@@ -256,7 +256,7 @@ köztes szereplőként funkcionál, amely a számára elérhető tartalmat hirde
 továbbítja más résztvevők felé, jellemzően a késleltetés, terheléselosztás 
 és elérhetőség optimalizálása érdekében. 
 Ezek a szereplők struktúrált MoQ adatfolyamokon keresztül kommunikálnak egymással, amelyek sávokból
-(\emph{track}) azon belül pedig objektumokból(\emph{object}) épülnek 
+(\emph{track}) azon belül pedig objektumokból (\emph{object}) épülnek 
 fel, lehetővé téve a médiatartalom rugalmas azonosítását és replikációját.
 
 \paragraph{}
@@ -264,7 +264,7 @@ A kidolgozás alatt álló szabvány szerint egy MoQ-alapú rendszerben a relay 
 egyszerre több publisher és subscriber felé is kapcsolatot fenntartani, 
 és akár multicast-szerű módon továbbítani a médiatartalmat. 
 A hálózati topológia e szerepkörök között rengetegféle lehet, mivel 
-a relayek közötti kapcsolat is támogatva van ami lehetővé teszi
+a relayek közötti kapcsolat is támogatott, ami lehetővé teszi
 a tartalom replikációját és elosztását a különböző relayek között. 
 Ezáltal a gazdag struktúrabeli opciók lehetőséget biztosítanak a tartalom dinamikus 
 és optimalizált terjesztésére, azonban egyben igényli azt is, hogy a transzport 
@@ -323,18 +323,18 @@ amelyek a futtató gépen létrehozott hálózati névterek, amelyeken virtuáli
 hálózati interfészeket és azokhoz hálózati konfigurációt rendelhetünk.
 Ezekben a névterekben lehet futtatni a tesztelni és megfigyelni kívánt programokat.
 A Mininet emellett lehetővé teszi a hálózati topológia 
-szimuláció közbeni megváltoztatását is, így kapcsolatok megszűnését 
-is könnyen szimulálhatjuk vele. \cite{mininet}
+szimuláció közbeni megváltoztatását is, így például kábelszakadás 
+is könnyen szimulálható vele. \cite{mininet}
 
-Az alábbi topológiát hoztam létre a Mininet segítségével, amellyel a multipath működését teszteltem (1. ábra):
+Az 1. ábrán látható topológiát hoztam létre a Mininet segítségével, amellyel a multipath működését teszteltem:
 
 \begin{figure}[h]
   \centering
     \includegraphics[width=15cm]{topo1}
-\caption{A Mininetben létrehozott topológia \cite{drawio}}
+\caption{A Mininetben létrehozott topológia logikai ábrázolása}
 \end{figure}
  
-Ahogy említettem a h1, h2, h3 jelölik a hostokat, s0-s5 jelölik a switch-eket, és r0 jelöli a routert.
+A h1, h2, h3 jelölik a hostokat, s0-s5 jelölik a switch-eket, és r0 jelöli a routert.
 h1 három interfésszel rendelkezik, egyenként csatlakozik a s0, s1 és s2 switch-ekhez, azok pedig a r0 routerhez.
 Hasonlóan h2 is, csak egy interfésszel, a h3 pedig kettővel csatlakozik.
 
@@ -345,34 +345,36 @@ mert a kapcsolatok szimuláció közbeni megszakítása problematikus, ha a megv
 Címzés szempontjából a hostok eltérő alhálózatokban vannak, (a h1-nek még emellett 
 mindhárom interfésze eltérő alhálózatban van, hogy az alapértelmezett átjáró eltérő lehessen, ezzel pontosabban szimulálva a valós környezetet),
 
-\paragraph{}
+A topológia azért így lett megvalóstva, hogy a multipath továbbítás minden releváns esetét lehessen tesztelni. 
+Például a h1 három interfésszel rendelkezik, hogy biztosítva legyen az, hogy nem csak két interfészen működik a multipath, azért van h3-nak is két interfésze, 
+hogy meg lehessen figyelni hogy viselkedik h2 egynél több multipath kapcsolat esetén, 
+vagy éppen a router és az alhálózatok is elhagyhatóak a működés szempontjából, azonban valós környezetben ezek kikerülhetetlenek. 
+
 A munkát és a tesztelést felgyorsítva mindezt egy Python szkript segítségével automatizáltam, 
 amely a mininet API-ját használja a virtuális gépek és kapcsolatok létrehozására, konfigurálására, kezelésére, beleértve
 a hostokon futtatott demonstrációs programokat és a Wireshark csomagelkapást is.
 Tehát egy script futtatásával pillanatok alatt megfigyelhető a kívánt program működése.
 
-\subsubsection{Megismerkedás a PicoQUIC könyvtárral}
+\subsubsection{A PicoQUIC programkönyvtár}
 
 \subparagraph{}
-A féléves munka kezdetén első célom az volt, 
-hogy alaposan megismerjem a PicoQUIC könyvtárat, mivel ez képezte a későbbi 
-fejlesztések technikai alapját. A megismerés első lépése a \textbf{picoquicdemo} példaprogram
-tanulmányozása és futtatása volt, ami segített megérteni a könyvtár felépítését, 
-működését, de különösen a multpath kezelés módjait.
+A fejlesztéshez elengedhetetlen a PicoQUIC alapvető ismerete, amihez megfelelő alapot képez a picoquicdemo program.
+A picoquicdemo egy egyszerű példa a PicoQUIC használatára, amely bemutatja a
+PicoQUIC könyvtár alapvető funkcióit és lehetőségeit, beleértve a kapcsolat
+felépítését, adatátvitelt és a hibakezelést, illetve multipath funkcionalitást is kínál. 
 
 Maga a pcioquicdemo felépítése elég egyszerű, olyan értelemben hogy ez egy darab C fájl, amely a PicoQUIC függvényeit használja, 
 és a szerver, valamint a kliensek funkcióit is ellátja egyaránt. 
 
-Sajnos pont emiatt az átláthatóságot nem feltétlen egyszerűsíti meg, de összességében 
-a munka során kiderült, hogy két dolog szükséges a multipath működéshez:
+Sajnos pont emiatt az átláthatóságot nem feltétlen egyszerűsíti meg, de összességében kiderült, hogy két dolog szükséges a multipath működéshez:
 
 \begin{itemize}
 
   \item a kezdeti multipath negotiation (egyeztetés) – ami arra szolgál, hogy a két fél közötti első
   kapcsolat felépítésekor megegyezzenek az összes többi transzport paraméter mellett abban is, 
-  hogy mind a két fél támogatja-e a többutas kapcsolatot
+  hogy mind a két fél támogatja-e a többutas kapcsolatot;
 
-  \item illetve az "extra" útvonalak tényleges kiépítése
+  \item illetve az "extra" útvonalak tényleges kiépítése.
 
 \end{itemize}
 
@@ -389,23 +391,19 @@ a LibQuicR könyvtárban való implementálásához.
 
 \subparagraph{}
 
-Munkám során elég korán előjött a kérdés, hogy hogyan tudom a PicoQUIC működését elemezni, mivel
-a tényleges működést nehéz folyamatában nyomon követni, hasznos lenne PicoQUIC kapcsolatot menedzselő adatfolyamot is látni.
-
 A PicoQUIC rengeteg funkciót és metrikát biztosít a működés elemzésére, 
-első sorban a qlog fájlok generálása lenne a leginkább logikus lépés, és
+első sorban a qlog fájlok generálása lenne a bevett módszer, és
 a protokoll alapszintű működésének megértése szempontjából valóban hasznos 
 a qlog, de nem minden esetben elegendő, mivel a QUIC protokoll
 sokféle eseményt és metrikát generál, amelyek közül sok nem feltétlenül releváns a 
-multipath működés szempontjából és maga a multipath is megnehezíti mivel az egyetlen 
-qlog vizualizáló amit találtam az a qvis \cite{qvis} \footnote{qvis: webes alkalmazás, amely a qlog 
+multipath működés szempontjából és maga a multipath is megnehezíti mivel a qlog események elemézésére használatos qvis program\cite{qvis} \footnote{qvis: webes alkalmazás, amely a qlog 
 fájlok vizualizálására szolgál, és sajnos a multipath használata könnyen eltorzítja a két oldal 
-kapcsolatának a szinkronizációját.} volt, ami sajnos nem tudja könnyen és átláthatóan kezelni a multipath eseményeket, 
-így ezzel nem tudtam megfelelően elemezni a kapcsolatokat.
+kapcsolatának a szinkronizációját.} nem képes könnyen és átláthatóan megjeleníteni a multipath eseményeket, 
+így ezzel nem lehet megfelelően elemezni a kapcsolatokat.
 
 \paragraph{}
-Ezt a nehézséget kiváltandó a Wireshark program választása sokkal hasznosabbnak bizonyult, mivel
-a QUIC protokollt is támogatja, illetve tanulmányaim során is találkoztam már vele. 
+A qlog fájlok elemzésénél sokkal hasznosabb a Wireshark program, mivel
+a QUIC protokollt is támogatja.
 Azonban ez olyan kihívást állít a qlog-gal szemben, hogy míg a 
 qlog fájlokat a program maga generálja, tehát a titkosítást ki tudja kerülni, 
 addig a Wireshark magukat a hálózati interfészen megjelenő csomagokat rögzíti, 
@@ -418,8 +416,8 @@ beállításával, ami segítségével fel lehet oldani a quic által használt 
 így a Wireshark képes dekódolni a csomagokat, és megjeleníteni azok 
 tartalmát (legalábbis a kapcsolat kezeléséért felelős quic réteg szempontjából).
 
-Ez a megoldás lehetővé tette számomra, hogy a Wireshark segítségével generált 
-pcapng fájlokat átkonvertáljam dekódolt formátumra az alábbi paranccsal:
+Ez a megoldás lehetővé teszi, hogy a Wireshark segítségével generált 
+pcapng fájlokat átkonvertáljuk dekódolt formátumra az alábbi paranccsal:
 \begin{verbatim}
   editcap --inject-secrets tls,<keylog_file> <input_pcap_file> 
     <output_pcap_file>
@@ -441,13 +439,13 @@ jobban elkülönülnek a különböző funkciók, így a PicoQUIC API-ját haszn
 Tulajdonképpen 3 funkciót kellett implementálni a LibQuicR könyvtárban,
 amelyek a multipath működéshez kapcsolódnak:
 \begin{enumerate}
-  \item CLI argumentumok kiegészítése multipath specifikus lehetőségekkel
+  \item CLI (command line interface, parancssori felhasználói felület) argumentumok kiegészítése multipath specifikus lehetőségekkel;
 
   \item a multipath negotiation (egyeztetés) – ami arra szolgál, hogy a két fél közötti első
   kapcsolat felépítésekor megegyezzenek az összes többi transzport paraméter mellett abban is, 
-  hogy mind a két fél támogatja-e a többutas kapcsolatot
+  hogy mind a két fél támogatja-e a többutas kapcsolatot;
 
-  \item a másodlagos útvonalak tényleges kiépítése
+  \item a másodlagos útvonalak tényleges kiépítése.
 
 \end{enumerate}
 
@@ -483,14 +481,8 @@ tartalmazzák, itt is a picoquicdemo-val azonos formátumot használtam, tehát 
 \begin{verbatim}
   -a "<ip-cím>/<interfész száma>,<ip-cím>/<interfész száma>,..."}
 \end{verbatim}
-Például a h1 host esetén ez az alábbi módon néz ki: "192.168.1.100/3,192.168.2.100/4". Látható, hogy az alapértelmezett ip címre nincs 
+Például a h1 host esetén ez az alábbi módon néz ki: "192.168.1.100/3,192.168.2.100/4". Látható, hogy az alapértelmezett ip-címre nincs 
 szüksége, mert azon már elkezdődött a kapcsolat, és csak azokat az interfészeket kell megadni, amelyeken a másodlagos útvonalakat kiépíti. 
-
-A megfelelő ip-cím/interfész párokat az 
-\begin{verbatim}
-  ip addr show
-\end{verbatim}
-paranccsal lehet lekérdezni linuxon, amely megjeleníti a host interfészeinek ip-címét és számát.
 
 Az eltérés a relay és a végponti kapcsolat között abban rejlik, hogy míg a relay fogadja a bejövő kapcsolatokat, addig a végponti kapcsolat esetén önállóan,
 a kapcsolat létrejötte után küldd PATH CHALLENGE üzeneteket a másodlagos interfészeken, 
@@ -522,7 +514,7 @@ Ebben a callback függvényben történik egy segédfüggvény segítségével a
 ugyancsak azonos módon működik mint a picoquicdemo esetén.
 
 
-\subsubsection{Elvégzett munka eredményei}
+\subsubsection{Funkcionális tesztelés}
 \paragraph{}
 
 Módosításaim eredményeként a bemutatott környezetben működik a multipath
@@ -530,13 +522,17 @@ kapcsolat, amely a másodlagos interfészeken keresztül adatokat küldeni és f
 minimális késleltetéssel képes a másodlagos interfészen folytani az adatátvitelt.
 Maga az adatátvitel időbélyegek másdopercenkénti küldését jelenti, ami egy beépített módja a LibQuicR demó programjának.
 
+A következő ábrák a bmon program kimenetét mutatják a h1 hoston, amely subscriber üzemmódban fut és három interfészen, intefészenként
+külön alhálózaton kommunkál a h2 hosttal egy rotueren keresztül, amely relay-ként üzemel.
+
 \begin{figure}[h]
   \centering
-    \includegraphics[width=14cm]{bmon1}
-\caption{Interfész aktivitás 3 aktív útvonallal}
+    \hspace*{-1.5cm}% vagy amennyivel szükséges
+    \includegraphics[width=18cm]{bmon1}
+\caption{Interfész aktivitás 3 aktív útvonallal, sorrendben 0, 1, és 2-es indexű interfészek}
 \end{figure}
 
-2. ábra képén látható, hogy 3 aktív interfészen keresztül van folyamatos adatátvitel, majd a 3. ábrán 
+2. ábrán látható, hogy 3 aktív interfészen keresztül van folyamatos adatátvitel, majd a 3. ábrán 
 már látható, hogy a nullás indexű interfészen nem folyik adat, mivel itt az ahhoz kapcsolódó switch és a router közötti kapcsolatot megszakítottam.
 Ezért a másodlagos interfészeken keresztül folytatódik az adatátvitel. Ezek nem csak azt bizonyítják, hogy a multipath 
 implementáció kezeli a kapcsolatszakadást, de azt is, hogy akár 3 interfészt is tud hasznosítani.
@@ -544,25 +540,26 @@ implementáció kezeli a kapcsolatszakadást, de azt is, hogy akár 3 interfész
 
 \begin{figure}[h]
   \centering
-    \includegraphics[width=14cm]{bmon2}
-\caption{Interfész aktivitás 2 aktív útvonallal}
+    \hspace*{-1.5cm}% vagy amennyivel szükséges
+    \includegraphics[width=18cm]{bmon2}
+\caption{Interfész aktivitás 2 aktív útvonallal, sorrendben 0, 1, és 2-es indexű interfészek}
 \end{figure}
 
-Majd pedig a 4. ábra képén látható, hogy az egyes indexű interfészen is leállt az adatátvitel (ugyancsak 
+Majd pedig a 4. ábrán látható, hogy az egyes indexű interfészen is leállt az adatátvitel (ugyancsak 
 kapcsolatszakadás miatt), de a kettes indexű interfész még mindig képes folytani a kapcsolatot.
 
 \begin{figure}[h]
   \centering
-    \includegraphics[width=14cm]{bmon3}
-\caption{Interfész aktivitás 1 aktív útvonallal}
+    \hspace*{-1.5cm}% vagy amennyivel szükséges
+    \includegraphics[width=18cm]{bmon3}
+\caption{Interfész aktivitás 1 aktív útvonallal, sorrendben 0, 1, és 2-es indexű interfészek}
 \end{figure}
 
-\pagebreak
 Fontos megjegyezni, hogy a relay minimális kódváltoztatással képes minden alábbi szituációban működni:
 \begin{itemize}
-  \item subscriber és publisher is 1-1 intefészen kapcsolódik
-  \item csak subscriber vagy csak publisher kapcsolódik egynél több interfészen
-  \item mind a subscirber és a publisher is több interfészen kapcsolódik
+  \item subscriber és publisher is egy-egy intefészen kapcsolódik;
+  \item csak subscriber vagy csak publisher kapcsolódik egynél több interfészen;
+  \item mind a subscirber és a publisher is több interfészen kapcsolódik.
 \end{itemize}
 
 Illetve érdekes azt is megjegyezni, hogy a korábban említett 
@@ -627,7 +624,7 @@ Ezeket a félév végén egy GitHub pull request keretében szeretném megosztan
 hogy a könyvtár további fejlesztése során egyrészt létrejöjjön egy multipath fejlesztési irány is a projektben, másrészt hogy
 a picoQUIC könyvtárral való együttműködést is megkönnyítse a LibQuicR könyvtár fejlesztői számára.
 
-\subsubsection{Egyéb következtetések amelyekre a munka során jutottam}
+\subsubsection{Egyéb következtetések}
 
 A Wireshark használata során érdekes kérdés merült fel a multipath PicoQUIC implementálásával kapcsolatban,
 mégpedig, hogy a kapcsolat útvonalait nem feltétlen kezeli az IETF Multipath draftja szerint, mivel adott útvonal kapcsán útvonal szakadás 
@@ -648,7 +645,7 @@ irányt a projekt folytatására.
 \begin{thebibliography}{9}
 \label{sec:tanulm-irod-jegyz}
 
-\bibitem{live_stats} Douglas Karr, \emph{Live Streaming Trends and Statistics (2024)}, 
+\bibitem{live_stats} Douglas Karr, \emph{Live Streaming Trends and Statistics (2024)}, (Accessed: 2024-05-12)\\ 
 \url{https://martech.zone/live-streaming-trends-statistics/}
 
 \bibitem{quic} J. Iyengar and M. Thomson.
@@ -656,9 +653,11 @@ irányt a projekt folytatására.
 \newblock RFC 9000, IETF, May 2021.\\
 \url{https://www.rfc-editor.org/rfc/rfc9000}
 
-\bibitem{mp_quic} QUIC Working Group, \emph{Multipath Extension for QUIC, draft-ietf-quic-multipath-14, 2025. apr. 24.}, \url{https://datatracker.ietf.org/doc/draft-ietf-quic-multipath/14/}
+\bibitem{mp_quic} QUIC Working Group, \emph{Multipath Extension for QUIC, draft-ietf-quic-multipath-14, 2025. apr. 24.}\\
+\url{https://datatracker.ietf.org/doc/draft-ietf-quic-multipath/14/}
 
-\bibitem{pico_git} Christian Huitema / Private Octopus Inc., \emph{PicoQUIC GitHub repository}, \url{https://github.com/private-octopus/picoquic}
+\bibitem{pico_git} Christian Huitema / Private Octopus Inc., \emph{PicoQUIC}, [GitHub repository], (Accessed: 2024-05-12)\\
+ \url{https://github.com/private-octopus/picoquic}
 
 \bibitem{moq_draft} IETF, \emph{Media over QUIC Transport, 2025. apr. 28.}, \url{https://datatracker.ietf.org/doc/draft-ietf-moq-transport/11/}
 
@@ -668,16 +667,15 @@ Bob Lantz, Brandon Heller, and Nick McKeown.
 \newblock In \emph{Proceedings of the 9th ACM SIGCOMM Workshop on Hot Topics in Networks (Hotnets-IX)}, pages 19--24, Monterey, California, 2010.
 \newblock Association for Computing Machinery. \url{https://doi.org/10.1145/1868447.1868466}.
 
-\bibitem{drawio} Draw.io segítségével készült ábra, \url{https://app.diagrams.net/}
-
-\bibitem{libquicr} Quicr, \emph{LibQuicR GitHub repository}, \url{https://github.com/Quicr/libquicr}
+\bibitem{libquicr} Quicr, \emph{LibQuicR}, [GitHub repository], (Accessed: 2024-05-12)\\
+ \url{https://github.com/Quicr/libquicr}
 
 \bibitem{qlog}Robin Marx.
-\newblock qlog: A standardized schema for logging and visualizing QUIC events.\\
+\newblock qlog: A standardized schema for logging and visualizing QUIC events. (Accessed: 2024-05-12)\\
 \url{https://github.com/quiclog/qlog}
 
 \bibitem{qvis}Robin Marx.
-\newblock qvis: A web-based tool for visualizing qlog files.\\
+\newblock qvis: A web-based tool for visualizing qlog files. (Accessed: 2024-05-12)\\
 \url{https://qvis.quictools.info}
 
 \end{thebibliography}
@@ -685,9 +683,10 @@ Bob Lantz, Brandon Heller, and Nick McKeown.
 %==================================================================
 \subsection{A csatlakozó dokumentumok jegyzéke}
 \label{sec:csat-irod}
-
+\paragraph{}
 Saját multipath implementációm GitHub repository-ja: \url{https://github.com/Schweitzee/libquicr/tree/multipath}
 
+\paragraph{}
 SSL keylog fájl generálásához szükséges módosítások: \url{https://github.com/Schweitzee/libquicr/tree/ssl-keylog}
 
 \end{document} 
