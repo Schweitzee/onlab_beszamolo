@@ -125,25 +125,23 @@
 
   %\feladatmaga argumentuma a feladat 1-2 bekezdésnyi ismertetése
   \feladatmaga{
-    A Media over QUIC (MoQ)\cite{moq_draft} egy új, még fejlesztés alatt álló protokoll család, 
-    amelyet az IETF szabványosít. Egyik megvalósítása a LibQuicR \cite{libquicr}, amely a feladat alapjául szolgál.
-  A feladat maga pedig nem más, mint a LibQuicR könyvtár módosítása 
-  oly módon, hogy az képes legyen kihasználni a 
-  multipath (többutas) adatátviteli képességeket, amelyeket a PicoQUIC nevű, 
-  QUIC protokollt\cite{quic} megvalósító könyvtár biztosít. A munka során
-  során a LibQuicR transzport rétegét úgy kell átalakítani, 
-  hogy az egy kapcsolaton belül több hálózati útvonal létesítésére 
-  és használatára legyen alkalmas a PicoQUIC multipath implementációján keresztül.
+A Media over QUIC (MoQ) egy új, még fejlesztés alatt álló protokollcsalád, 
+amelyet internetes médiaadatok hatékony továbbítására terveztek. Ennek egyik 
+meglévő megvalósítása a LibQuicR nevű könyvtár, amely jelen feladat alapját képezi.
 
-  A módosításokat követően a rendszer működését egy demonstráció
-  igazolja: egy virtuális tesztkörnyezetben szimulált, több hálózati 
-  interfésszel rendelkező kliensek segítségével történik az adatátvitel, 
-  amely során aktívan használjuk a multipath képességeket. A demonstráció 
-  során egy olyan forgatókönyvet vizsgálunk, ahol az egyik aktív 
-  útvonalat szándékosan megszakítjuk. 
-  A cél annak bemutatása, hogy a LibQuicR – az új multipath támogatással – 
-  beavatkozás nélkül képes fenntartani az adatfolyam 
-  továbbítását, minimális késleltetéssel és megszakítással.}
+A feladat célja a LibQuicR módosítása úgy, hogy képes legyen kihasználni a több 
+útvonalon történő párhuzamos adatátvitelt (multipath), amit a PicoQUIC nevű, QUIC 
+protokollt megvalósító könyvtár biztosít. Ennek érdekében a LibQuicR transzport rétegét 
+úgy kell átalakítani, hogy egyetlen kapcsolat keretében több hálózati útvonalat is 
+tudjon létrehozni és kezelni a PicoQUIC multipath képességein keresztül.
+
+A módosítások működését egy demonstrációval igazoljuk, amelyet egy virtuális 
+tesztkörnyezetben hajtunk végre. Ebben a környezetben több hálózati interfésszel 
+rendelkező kliensek vesznek részt, és az adatátvitel során aktívan kihasználjuk 
+a multipath lehetőségeket. A teszt során szándékosan megszakítunk egy éppen használt 
+útvonalat, hogy bemutassuk: a LibQuicR – az új multipath támogatással – képes 
+automatikusan fenntartani az adatfolyam továbbítását, minimális késleltetéssel 
+és megszakítás nélkül.}
 
  
   %\tanevfelev argumentumok:
@@ -170,9 +168,9 @@ technológiai kihívást jelent, különösen akkor, ha a felhasználói élmén
 figyelembe vesszük: az alacsony késleltetés, a megszakításmentes lejátszás 
 és a biztonságos adatátvitel alapvető elvárások.
 
-E kihívásokra jött létre válaszként a QUIC protokoll, amely UDP-alapú, alacsony 
+E kihívásokra jött létre válaszként a QUIC protokoll\cite{quic}, amely UDP-alapú, alacsony 
 késleltetésű, titkosított és megbízható adatátvitelt tesz lehetővé. Erre épülve 
-fejlődik jelenleg a Media over QUIC (MoQ) szabvány, amely kifejezetten 
+fejlődik jelenleg a Media over QUIC (MoQ) szabvány\cite{moq_draft}, amely kifejezetten 
 médiatartalmak hatékony továbbítását célozza a QUIC képességeit kihasználva.
 
 Ezzel párhuzamosan a felhasználói eszközök – különösen a mobiltelefonok és 
@@ -204,8 +202,8 @@ hozzájárul a végfelhasználói élmény javításához is.
 Az internetes multimédia átviteli technológiai fejlődése során egyre 
 nagyobb igény mutatkozik olyan protokollokra, amelyek képesek 
 rugalmasan és hatékonyan kezelni a valós idejű adatfolyamokat, még 
-változékony és megbízhatatlan hálózati körülmények között is. \cite{quic} A QUIC 
-protokoll – mint UDP-alapú, titkosított és kapcsolatorientált 
+változékony és megbízhatatlan hálózati körülmények között is. A QUIC 
+protokoll\cite{quic} – mint UDP-alapú, titkosított és kapcsolatorientált 
 transzport protokoll – alapjaiban újraértelmezi a hálózati kommunikáció 
 lehetőségeit, különösen olyan kiterjesztésekkel, mint a \emph{multipath} 
 adatátvitel \cite{mp_quic}. A multipath képesség lehetővé teszi több párhuzamos hálózati 
@@ -284,7 +282,7 @@ rendelkezésre állás, az alacsony késleltetés és az automatikus hibatűrés
 A MoQ protokoll jelenlegi állapota még fejlesztés alatt áll, és jelenleg egyik implementáció
 sem támogat transzportprotokoll szintű multipath képességeket.
 
-Bár más MoQ megvalósítások is léteznek, azért a LibQuicR könyvtárra esett a
+Bár más MoQ megvalósítások is léteznek, azért a LibQuicR\cite{libquicr} könyvtárra esett a
 választás, mert a QUIC protokollt a PicoQUIC könyvtár segítségével implementálja, amely
 jelenleg is folyamatosan bővül, és multipath támogatása is követi a legújabb szabványosítási irányokat.
 
@@ -386,6 +384,17 @@ multipath, amikor több interfész használatával több útvonalat alakítunk k
 Jelenlegi munka szempontjából ez az egyszerű multipath a leginkább releváns,
 mivel amíg az nem működik megfelelően, addig a komplexebb multipath forgatókönyvek nem is igazán tesztelhetők/használhatók.
 Az ezt ellátó kódrészlet a picoquicdemo-ban jól elkülönül, így jó alapot biztosított a LibQuicR könyvtárbeli implementációhoz.
+
+\subsubsection{Egyéb következtetések a PicoQUIC kapcsán}
+
+A Wireshark használata során érdekes kérdés merült fel a multipath PicoQUIC implementálásával kapcsolatban,
+mégpedig, hogy nem feltétlenül kezeli a kapcsolat útvonalait az IETF QUIC Multipath draftja szerint, mivel adott útvonal kapcsán útvonal szakadás 
+esetén nem láttunk PATH ABANDON üzenetet, ami arra szolgálna, hogy egy már nem működő útvonalat inaktívvá nyilvánítson mind a két fél számára.
+Azonban olyan érdekes jelenség is előfordult, hogy A és B útvonal esetében A útvonal megszakítása után B útvonalon ment tovább az adatátvitel,
+de ha A útvonal újra aktívvá vált, akkor nem használta újra azt, és ezután B útvonal megszakítása után sem váltott vissza A útvonalra. Ami ezt még inkább érdekessé 
+teszi, az az, hogy B útvonalat újra aktiválva az adatátvitel folytatódott. Tehát a PicoQUIC multipath implementációja nem feltétlenül
+kezel minden esetet a draft szerint, de ez nem feltétlenül jelent problémát a jelenlegi fejlesztési szakaszban, 
+mivel a protokoll még nem végleges, és ez a viselkedés egyben kijelölhet egy lehetséges irányt a projekt további bővítésére vagy finomhangolására.
 
 \subsubsection{Működés elemzésének módjai}
 
@@ -553,63 +562,54 @@ változó a kódban 2-re van állítva, ha multipath környezetben indul el a pr
 de ez nem korlátozza le kapcsolatonként két interfész használatára sem a relayt, sem pedig a 
 subscribert vagy a publishert, mint látható a 2. ábrán, ahol 3 interfész van aktívan használva.
 
-\subsubsection{Egyéb következtetések a PicoQUIC kapcsán}
-
-A Wireshark használata során érdekes kérdés merült fel a multipath PicoQUIC implementálásával kapcsolatban,
-mégpedig, hogy nem feltétlenül kezeli a kapcsolat útvonalait az IETF QUIC Multipath draftja szerint, mivel adott útvonal kapcsán útvonal szakadás 
-esetén nem láttunk PATH ABANDON üzenetet, ami arra szolgálna, hogy egy már nem működő útvonalat inaktívvá nyilvánítson mind a két fél számára.
-Azonban olyan érdekes jelenség is előfordult, hogy A és B útvonal esetében A útvonal megszakítása után B útvonalon ment tovább az adatátvitel,
-de ha A útvonal újra aktívvá vált, akkor nem használta újra azt, és ezután B útvonal megszakítása után sem váltott vissza A útvonalra. Ami ezt még inkább érdekessé 
-teszi, az az, hogy B útvonalat újra aktiválva az adatátvitel folytatódott. Tehát a PicoQUIC multipath implementációja nem feltétlenül
-kezel minden esetet a draft szerint, de ez nem feltétlenül jelent problémát a jelenlegi fejlesztési szakaszban, 
-mivel a protokoll még nem végleges, és ez a viselkedés egyben kijelölhet egy lehetséges irányt a projekt további bővítésére vagy finomhangolására.
-
 \subsection{Összefoglalás}
 \label{sec:osszefoglalas}
 
 \subsubsection{Féléves feladat összefoglalása}
 \paragraph{}
 
-Féléves feladatom a QUIC feletti médiaátvitelt megvalósító LibQuicR könyvtárban egy kezdetleges multipath támogatás implementálása volt, valamint ehhez kapcsolódóan egy demonstrációs környezet kialakítása és a megvalósítás működésének értékelése. A munka során az alábbi eredményeket értem el:
+Féléves feladatom a QUIC feletti médiaátvitelt megvalósító LibQuicR könyvtárban egy kezdetleges multipath támogatás 
+implementálása volt, valamint ehhez kapcsolódóan egy demonstrációs környezet kialakítása és a megvalósítás 
+működésének értékelése. A munka során az alábbi eredményeket értem el:
 
 \begin{itemize}
-\item A LibQuicR könyvtárban a multipath működésének kezdetleges implementálása, 
+\item A LibQuicR könyvtárban a multipath működést kezdetlegesen implementáltam, 
 amely megalapozhatja a jövőbeni, fejlettebb multipath támogatást a projektben. Implementációm GitHub repository-ja: 
 \href{https://github.com/Schweitzee/libquicr/tree/multipath}{github.com/Schweitzee/libquicr (multipath branch)}
+\item A fejlesztést dokumentáltam, a megvalósítást letisztáztam és előkészítettem 
+GitHub-on történő közzétételre pull request formájában az eredeti projekthez.
 \item SSL keylog fájl generálásának lehetőségét beépítettem a LibQuicR könyvtár 
 általam módosított verziójába, ez segíti a protokoll működésének nyomon követését 
 és az elemzést például Wireshark eszközzel. Elvégzett módosítások: 
 \href{https://github.com/Schweitzee/libquicr/tree/ssl-keylog}{github.com/Schweitzee/libquicr (ssl-keylog branch)}
 \item A Mininet program segítségével egy demonstrációs környezetet alakítottam ki, 
 amelyben a megvalósítás különböző hálózati szcenáriókban is kipróbálható.
-\item A fejlesztés dokumentálása, a megvalósítás letisztázása és előkészítése 
-GitHub-on történő közzétételre.
 \end{itemize}
 
-A munkám két legfontosabb eredménye a multipath funkcionalitás 
-kezdeti megvalósítása és az SSL kulcsnaplózás integrálása, amelyek 
-lehetőséget teremtenek a multipath irányú fejlesztések folytatására, 
-illetve támogatják a PicoQUIC könyvtárral való szorosabb együttműködést. 
-A félév végén ezeket a fejlesztéseket GitHub pull request formájában kívánom 
-megosztani a LibQuicR könyvtár fejlesztőivel, hogy azok hivatalos részei lehessenek a projektnek.
-
 \subsubsection{Továbbfejlesztési lehetőségek}
-
+\paragraph{}
 Ez az implementáció az első ilyen jellegű próbálkozás a Media over QUIC (MoQ) architektúrában, és bár 
 jelenleg csupán kezdetleges multipath funkcionalitást nyújt, már most jól látható, hogy számos továbbfejlesztési 
 lehetőséget kínál, amelyek megvalósításához a félév során elvégzett munka szilárd kiindulási alapot jelent. 
+
 A projekt lehetséges folytatási irányai közé tartozik például a relay oldali fejlesztések kibővítése oly 
 módon, hogy az ne csupán egyetlen, hanem több interfészt is képes legyen aktívan használni a továbbítás 
-során. Emellett további multipath képességek is implementálhatók, amelyek a PicoQUIC picoquicdemo 
+során. 
+
+Emellett további multipath képességek is implementálhatók, amelyek a PicoQUIC picoquicdemo 
 programjában már elérhetők, de ebben az implementációban még nem kerültek alkalmazásra. Ilyen lehetőség 
 például a kapcsolati azonosítók dinamikus megújítása, vagy a NAT rebinding kezelése. Utóbbi alatt 
 azt értjük, hogy a hálózati címfordító (NAT) eszköz egy új külső IP-cím és port párost rendel a 
 klienshez – például újracsatlakozás esetén –, amit a protokollnak megfelelően le kell tudni követni. 
 Szintén megvalósítható az azonos IP-címről, de eltérő porttal indított új útvonalak kezelése, illetve 
 annak a lehetősége is, hogy a kapcsolat teljes egészében átmigráljon egy másodlagos interfészre, ha 
-például az elsődleges hálózati kapcsolat megszakad vagy instabillá válik. Ezen felül érdemes megvizsgálni a 
+például az elsődleges hálózati kapcsolat megszakad vagy instabillá válik. 
+
+Ezen felül érdemes megvizsgálni a 
 multipath továbbítás alkalmazhatóságát relay-ek közötti kapcsolatok esetén is, hiszen ez további 
-redundanciát és rugalmasságot biztosíthat a rendszer egészében. Végül egy hosszabb távú fejlesztési 
+redundanciát és rugalmasságot biztosíthat a rendszer egészében. 
+
+Végül egy hosszabb távú fejlesztési 
 irány lehet egy olyan demonstrációs program készítése, amely valós médiatartalmakat – például élő 
 videó streamet – továbbít multipath használatával, ezzel lehetőséget nyújtva a gyakorlati előnyök 
 részletesebb értékelésére és bemutatására.
